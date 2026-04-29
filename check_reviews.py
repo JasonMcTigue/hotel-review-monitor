@@ -49,7 +49,9 @@ def get_google_place_id():
         },
         timeout=10,
     )
-    candidates = resp.json().get("candidates", [])
+    data = resp.json()
+    print(f"Google API response: {data.get('status')} — {data.get('error_message', '')}")
+    candidates = data.get("candidates", [])
     return candidates[0]["place_id"] if candidates else None
 
 
@@ -73,8 +75,10 @@ def get_tripadvisor_reviews():
         params={"key": TRIPADVISOR_API_KEY, "language": "en"},
         timeout=10,
     )
+    data = resp.json()
+    print(f"TripAdvisor API status: {resp.status_code} — {data}")
     reviews = []
-    for r in resp.json().get("data", []):
+    for r in data.get("data", []):
         reviews.append({
             "id": str(r.get("id", "")),
             "author": r.get("user", {}).get("username", "Anonymous"),
