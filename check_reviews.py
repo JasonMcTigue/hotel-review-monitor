@@ -38,35 +38,25 @@ def save_state(state):
 
 
 def get_google_place_id():
-    resp = requests.get(
-        "https://maps.googleapis.com/maps/api/place/findplacefromtext/json",
-        params={
-            "input": HOTEL_NAME,
-            "inputtype": "textquery",
-            "locationbias": f"point:{HOTEL_LAT},{HOTEL_LNG}",
-            "fields": "place_id",
-            "key": GOOGLE_API_KEY,
-        },
+    resp = requests.post(
+        "https://places.googleapis.com/v1/places:searchText",
+        json={"textQuery": HOTEL_NAME, "locationBias": {"circle": {"center": {"latitude": HOTEL_LAT, "longitude": HOTEL_LNG}, "radius": 1000.0}}},
+        headers={"X-Goog-Api-Key": GOOGLE_API_KEY, "X-Goog-FieldMask": "places.id"},
         timeout=10,
     )
     data = resp.json()
-    print(f"Google API response: {data.get('status')} — {data.get('error_message', '')}")
-    candidates = data.get("candidates", [])
-    return candidates[0]["place_id"] if candidates else None
+    print(f"Google API response: {resp.status_code} — {data.get('error', {}).get('message', 'ok')}")
+    places = data.get("places", [])
+    return places[0]["id"] if places else None
 
 
 def get_google_reviews(place_id):
     resp = requests.get(
-        "https://maps.googleapis.com/maps/api/place/details/json",
-        params={
-            "place_id": place_id,
-            "fields": "reviews",
-            "reviews_sort": "newest",
-            "key": GOOGLE_API_KEY,
-        },
+        f"https://places.googleapis.com/v1/places/{place_id}",
+        headers={"X-Goog-Api-Key": GOOGLE_API_KEY, "X-Goog-FieldMask": "reviews"},
         timeout=10,
     )
-    return resp.json().get("result", {}).get("reviews", [])
+    return resp.json().get("reviews", [])
 
 
 def get_tripadvisor_reviews():
@@ -160,20 +150,20 @@ def main():
     place_id = state.get("google_place_id") or get_google_place_id()
     if place_id:
         state["google_place_id"] = place_id
-        seen_times = set(str(t) for t in state.get("google_times", []))
+        seen_ids = set(state.get("google_times", []))
         for r in get_google_reviews(place_id):
-            t = str(r.get("time", ""))
-            if t and t not in seen_times:
+            rid = r.get("name", "")
+            if rid and rid not in seen_ids:
                 if state["initialized"]:
                     new_reviews["Google"].append({
-                        "author": r.get("author_name", "Anonymous"),
+                        "author": r.get("authorAttribution", {}).get("displayName", "Anonymous"),
                         "rating": str(r.get("rating", "?")),
-                        "text": r.get("text", "")[:1000],
-                        "date": r.get("relative_time_description", ""),
+                        "text": r.get("text", {}).get("text", "")[:1000],
+                        "date": r.get("relativePublishTimeDescription", ""),
                         "title": "",
                     })
-                seen_times.add(t)
-        state["google_times"] = list(seen_times)
+                seen_ids.add(rid)
+        state["google_times"] = list(seen_ids)
     else:
         print("Warning: Could not find Google Place ID — check your API key")
 
@@ -213,10 +203,10 @@ if __name__ == "__main__":
             if reviews:
                 r = reviews[0]
                 test_reviews["Google"].append({
-                    "author": r.get("author_name", "Anonymous"),
+                    "author": r.get("authorAttribution", {}).get("displayName", "Anonymous"),
                     "rating": str(r.get("rating", "?")),
-                    "text": r.get("text", "")[:1000],
-                    "date": r.get("relative_time_description", ""),
+                    "text": r.get("text", {}).get("text", "")[:1000],
+                    "date": r.get("relativePublishTimeDescription", ""),
                     "title": "",
                 })
         else:
