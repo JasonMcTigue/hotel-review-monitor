@@ -1,24 +1,19 @@
 #!/usr/bin/env python3
 import json
 import os
-import re
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-import cloudscraper
 import requests
-from bs4 import BeautifulSoup
 
-TRIPADVISOR_URL = (
-    "https://www.tripadvisor.ie/Hotel_Review-g186627-d34251217-Reviews-"
-    "The_Grace_Westport_Estate-Westport_County_Mayo_Western_Ireland.html"
-)
+TRIPADVISOR_LOCATION_ID = "34251217"
 HOTEL_NAME = "The Grace Westport Estate"
 HOTEL_LAT = 53.8009718
 HOTEL_LNG = -9.5285384
 
 GOOGLE_API_KEY = os.environ["GOOGLE_PLACES_API_KEY"]
+TRIPADVISOR_API_KEY = os.environ["TRIPADVISOR_API_KEY"]
 SENDER_EMAIL = "c_newport26@yahoo.com"
 SENDER_APP_PASSWORD = os.environ["YAHOO_APP_PASSWORD"]
 MANAGER_EMAIL = "jasonmctigue@live.ie"
@@ -72,36 +67,22 @@ def get_google_reviews(place_id):
     return resp.json().get("result", {}).get("reviews", [])
 
 
-def scrape_tripadvisor():
-    scraper = cloudscraper.create_scraper()
-    resp = scraper.get(TRIPADVISOR_URL, timeout=30)
-    soup = BeautifulSoup(resp.text, "lxml")
+def get_tripadvisor_reviews():
+    resp = requests.get(
+        f"https://api.content.tripadvisor.com/api/v1/location/{TRIPADVISOR_LOCATION_ID}/reviews",
+        params={"key": TRIPADVISOR_API_KEY, "language": "en"},
+        timeout=10,
+    )
     reviews = []
-
-    # Parse JSON-LD structured data (most reliable, least fragile)
-    for script in soup.find_all("script", type="application/ld+json"):
-        try:
-            data = json.loads(script.string or "")
-            if isinstance(data, list):
-                data = next((d for d in data if "review" in d), {})
-            if "review" not in data:
-                continue
-            for r in data["review"]:
-                url = r.get("@id", r.get("url", ""))
-                m = re.search(r"-r(\d+)-", url)
-                reviews.append({
-                    "id": m.group(1) if m else url,
-                    "author": r.get("author", {}).get("name", "Anonymous"),
-                    "rating": str(r.get("reviewRating", {}).get("ratingValue", "?")),
-                    "title": r.get("name", ""),
-                    "text": r.get("reviewBody", "")[:1000],
-                    "date": r.get("datePublished", ""),
-                })
-            if reviews:
-                return reviews
-        except (json.JSONDecodeError, AttributeError):
-            continue
-
+    for r in resp.json().get("data", []):
+        reviews.append({
+            "id": str(r.get("id", "")),
+            "author": r.get("user", {}).get("username", "Anonymous"),
+            "rating": str(r.get("rating", "?")),
+            "title": r.get("title", ""),
+            "text": r.get("text", "")[:1000],
+            "date": r.get("published_date", "")[:10],
+        })
     return reviews
 
 
@@ -194,7 +175,7 @@ def main():
 
     # TripAdvisor Reviews
     seen_ids = set(str(i) for i in state.get("tripadvisor_ids", []))
-    for r in scrape_tripadvisor():
+    for r in get_tripadvisor_reviews():
         rid = str(r["id"])
         if rid not in seen_ids:
             if state["initialized"]:
@@ -237,7 +218,7 @@ if __name__ == "__main__":
         else:
             print("Warning: Could not find Google Place ID — check your API key")
 
-        ta_reviews = scrape_tripadvisor()
+        ta_reviews = get_tripadvisor_reviews()
         print(f"TripAdvisor reviews fetched: {len(ta_reviews)}")
         if ta_reviews:
             test_reviews["TripAdvisor"].append(ta_reviews[0])
