@@ -218,16 +218,31 @@ def main():
 if __name__ == "__main__":
     import sys
     if "--test" in sys.argv:
-        send_email({
-            "Google": [{
-                "author": "Test User",
-                "rating": "5",
-                "text": "This is a test email from the hotel review monitor. Everything is working correctly!",
-                "date": "just now",
-                "title": "",
-            }],
-            "TripAdvisor": [],
-        })
-        print("Test email sent.")
+        test_reviews = {"Google": [], "TripAdvisor": []}
+
+        place_id = get_google_place_id()
+        if place_id:
+            reviews = get_google_reviews(place_id)
+            if reviews:
+                r = reviews[0]
+                test_reviews["Google"].append({
+                    "author": r.get("author_name", "Anonymous"),
+                    "rating": str(r.get("rating", "?")),
+                    "text": r.get("text", "")[:1000],
+                    "date": r.get("relative_time_description", ""),
+                    "title": "",
+                })
+        else:
+            print("Warning: Could not find Google Place ID — check your API key")
+
+        ta_reviews = scrape_tripadvisor()
+        if ta_reviews:
+            test_reviews["TripAdvisor"].append(ta_reviews[0])
+
+        if any(test_reviews.values()):
+            send_email(test_reviews)
+            print("Test email sent with real latest reviews.")
+        else:
+            print("No reviews found to send.")
     else:
         main()
