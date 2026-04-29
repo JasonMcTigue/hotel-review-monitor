@@ -216,4 +216,18 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    import sys
+    if "--test" in sys.argv:
+        send_email({
+            "Google": [{
+                "author": "Test User",
+                "rating": "5",
+                "text": "This is a test email from the hotel review monitor. Everything is working correctly!",
+                "date": "just now",
+                "title": "",
+            }],
+            "TripAdvisor": [],
+        })
+        print("Test email sent.")
+    else:
+        main()

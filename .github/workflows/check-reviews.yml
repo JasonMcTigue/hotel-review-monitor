@@ -3,7 +3,12 @@ name: Check Hotel Reviews
 on:
   schedule:
     - cron: '*/30 * * * *'  # every 30 minutes
-  workflow_dispatch:      # allow manual runs
+  workflow_dispatch:
+    inputs:
+      test_email:
+        description: 'Send a test email'
+        type: boolean
+        default: false
 
 jobs:
   check:
@@ -25,7 +30,7 @@ jobs:
         env:
           GOOGLE_PLACES_API_KEY: ${{ secrets.GOOGLE_PLACES_API_KEY }}
           YAHOO_APP_PASSWORD: ${{ secrets.YAHOO_APP_PASSWORD }}
-        run: python check_reviews.py
+        run: python check_reviews.py ${{ inputs.test_email == true && '--test' || '' }}
 
       - name: Save state
         env:
