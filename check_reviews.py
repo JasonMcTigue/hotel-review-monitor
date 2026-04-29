@@ -221,8 +221,10 @@ if __name__ == "__main__":
         test_reviews = {"Google": [], "TripAdvisor": []}
 
         place_id = get_google_place_id()
+        print(f"Google Place ID: {place_id}")
         if place_id:
             reviews = get_google_reviews(place_id)
+            print(f"Google reviews fetched: {len(reviews)}")
             if reviews:
                 r = reviews[0]
                 test_reviews["Google"].append({
@@ -236,6 +238,7 @@ if __name__ == "__main__":
             print("Warning: Could not find Google Place ID — check your API key")
 
         ta_reviews = scrape_tripadvisor()
+        print(f"TripAdvisor reviews fetched: {len(ta_reviews)}")
         if ta_reviews:
             test_reviews["TripAdvisor"].append(ta_reviews[0])
 
