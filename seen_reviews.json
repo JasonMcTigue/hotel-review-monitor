@@ -1,12 +1,6 @@
 {
-  "initialized": true,
-  "tripadvisor_ids": [
-    "1057980880",
-    "1057422818",
-    "1057543294",
-    "1058264032",
-    "1057648161"
-  ],
+  "initialized": false,
+  "tripadvisor_ids": [],
   "google_times": [],
   "google_place_id": null
 }
