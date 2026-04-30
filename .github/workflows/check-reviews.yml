@@ -31,7 +31,12 @@ jobs:
           GOOGLE_PLACES_API_KEY: ${{ secrets.GOOGLE_PLACES_API_KEY }}
           YAHOO_APP_PASSWORD: ${{ secrets.YAHOO_APP_PASSWORD }}
           TRIPADVISOR_API_KEY: ${{ secrets.TRIPADVISOR_API_KE }}
-        run: python check_reviews.py ${{ inputs.test_email == 'true' && '--test' || '' }}
+        run: |
+          if [ "${{ inputs.test_email }}" = "true" ]; then
+            python check_reviews.py --test
+          else
+            python check_reviews.py
+          fi
 
       - name: Save state
         env:
