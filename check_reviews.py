@@ -221,6 +221,9 @@ if __name__ == "__main__":
         print(f"TripAdvisor reviews fetched: {len(ta_reviews)}")
         if ta_reviews:
             test_reviews["TripAdvisor"].append(ta_reviews[0])
+            low = next((r for r in ta_reviews if int(float(r["rating"])) <= 2), None)
+            if low and low != ta_reviews[0]:
+                test_reviews["TripAdvisor"].append(low)
 
         if any(test_reviews.values()):
             send_email(test_reviews)
