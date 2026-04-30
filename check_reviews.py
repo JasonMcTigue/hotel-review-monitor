@@ -104,8 +104,13 @@ def send_email(new_reviews):
                 if r.get("title")
                 else ""
             )
+            try:
+                rating_num = int(float(r['rating']))
+            except (ValueError, TypeError):
+                rating_num = 0
+            border_color = "#e74c3c" if rating_num <= 2 else "#4CAF50"
             cards.append(f"""
-            <div style="background:#f9f9f9;border-left:4px solid #4CAF50;
+            <div style="background:#f9f9f9;border-left:4px solid {border_color};
                         padding:12px 16px;margin:10px 0;border-radius:4px;">
               <div style="font-weight:bold;font-size:15px;">{r['author']}</div>
               <div style="color:#f5a623;font-size:18px;margin:4px 0;">{star_rating(r['rating'])}</div>
