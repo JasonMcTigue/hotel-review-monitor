@@ -1,6 +1,6 @@
 # Hotel Review Monitor
 
-Automatically monitors Google and TripAdvisor reviews for The Grace Westport Estate and sends email alerts when new reviews are posted.
+Automatically monitors Google and TripAdvisor reviews for **** and sends email alerts when new reviews are posted.
 
 ## How it works
 
