@@ -16,7 +16,7 @@ GOOGLE_API_KEY = os.environ["GOOGLE_PLACES_API_KEY"]
 TRIPADVISOR_API_KEY = os.environ["TRIPADVISOR_API_KEY"]
 SENDER_EMAIL = "c_newport26@yahoo.com"
 SENDER_APP_PASSWORD = os.environ["YAHOO_APP_PASSWORD"]
-MANAGER_EMAIL = "jasonmctigue@live.ie"
+RECIPIENT_EMAILS = ["jasonmctigue@live.ie", "creidy@thegrace.ie"]
 STATE_FILE = "seen_reviews.json"
 
 
@@ -137,12 +137,12 @@ def send_email(new_reviews):
     msg = MIMEMultipart("alternative")
     msg["Subject"] = subject
     msg["From"] = f"Hotel Review Monitor <{SENDER_EMAIL}>"
-    msg["To"] = MANAGER_EMAIL
+    msg["To"] = ", ".join(RECIPIENT_EMAILS)
     msg.attach(MIMEText(html, "html"))
 
     with smtplib.SMTP_SSL("smtp.mail.yahoo.com", 465) as server:
         server.login(SENDER_EMAIL, SENDER_APP_PASSWORD)
-        server.sendmail(SENDER_EMAIL, MANAGER_EMAIL, msg.as_string())
+        server.sendmail(SENDER_EMAIL, RECIPIENT_EMAILS, msg.as_string())
 
     print(f"Email sent: {subject}")
 
