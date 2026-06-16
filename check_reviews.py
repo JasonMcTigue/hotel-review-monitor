@@ -2,6 +2,7 @@
 import json
 import os
 import smtplib
+from datetime import datetime
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
@@ -29,7 +30,44 @@ def load_state():
         "tripadvisor_ids": [],
         "google_times": [],
         "google_place_id": None,
+        "google_last_publish": None,
+        "tripadvisor_last_publish": None,
     }
+
+
+def parse_ts(s):
+    """Parse an RFC3339 timestamp into a comparable datetime, or None."""
+    if not s:
+        return None
+    s = s.strip().replace("Z", "+00:00")
+    # Truncate over-long fractional seconds (Google can return nanoseconds).
+    if "." in s:
+        head, frac = s.split(".", 1)
+        tz = ""
+        for sep in ("+", "-"):
+            if sep in frac:
+                idx = frac.index(sep)
+                tz, frac = frac[idx:], frac[:idx]
+                break
+        s = f"{head}.{frac[:6]}{tz}"
+    try:
+        return datetime.fromisoformat(s)
+    except ValueError:
+        return None
+
+
+def is_newer(ts, watermark):
+    """True if review timestamp ts is strictly newer than the stored watermark.
+
+    A missing watermark (first run after this change) bootstraps without
+    treating already-present reviews as new — ID dedup handles those.
+    """
+    if watermark is None:
+        return True
+    a, b = parse_ts(ts), parse_ts(watermark)
+    if a is None or b is None:
+        return True
+    return a > b
 
 
 def save_state(state):
@@ -76,6 +114,7 @@ def get_tripadvisor_reviews():
             "title": r.get("title", ""),
             "text": r.get("text", "")[:1000],
             "date": r.get("published_date", "")[:10],
+            "_published": r.get("published_date", ""),
         })
     return reviews
 
@@ -156,10 +195,15 @@ def main():
     if place_id:
         state["google_place_id"] = place_id
         seen_ids = set(state.get("google_times", []))
-        for r in get_google_reviews(place_id):
+        watermark = state.get("google_last_publish")
+        google_reviews = get_google_reviews(place_id)
+        for r in google_reviews:
             rid = r.get("name", "")
             if rid and rid not in seen_ids:
-                if state["initialized"]:
+                # Google returns only ~5 reviews ranked by relevance, not date,
+                # so an old review can rotate back in with an unseen ID. Only
+                # alert when it's genuinely newer than the latest we've seen.
+                if state["initialized"] and is_newer(r.get("publishTime"), watermark):
                     new_reviews["Google"].append({
                         "author": r.get("authorAttribution", {}).get("displayName", "Anonymous"),
                         "rating": str(r.get("rating", "?")),
@@ -169,18 +213,32 @@ def main():
                     })
                 seen_ids.add(rid)
         state["google_times"] = list(seen_ids)
+        dated = [(parse_ts(r.get("publishTime")), r.get("publishTime"))
+                 for r in google_reviews if parse_ts(r.get("publishTime"))]
+        if dated:
+            newest = max(dated, key=lambda x: x[0])[1]
+            if is_newer(newest, watermark):
+                state["google_last_publish"] = newest
     else:
         print("Warning: Could not find Google Place ID — check your API key")
 
     # TripAdvisor Reviews
     seen_ids = set(str(i) for i in state.get("tripadvisor_ids", []))
-    for r in get_tripadvisor_reviews():
+    watermark = state.get("tripadvisor_last_publish")
+    ta_reviews = get_tripadvisor_reviews()
+    for r in ta_reviews:
         rid = str(r["id"])
         if rid not in seen_ids:
-            if state["initialized"]:
+            if state["initialized"] and is_newer(r.get("_published"), watermark):
                 new_reviews["TripAdvisor"].append(r)
             seen_ids.add(rid)
     state["tripadvisor_ids"] = list(seen_ids)
+    dated = [(parse_ts(r.get("_published")), r.get("_published"))
+             for r in ta_reviews if parse_ts(r.get("_published"))]
+    if dated:
+        newest = max(dated, key=lambda x: x[0])[1]
+        if is_newer(newest, watermark):
+            state["tripadvisor_last_publish"] = newest
 
     if not state["initialized"]:
         state["initialized"] = True
