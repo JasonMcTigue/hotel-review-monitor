@@ -2,7 +2,7 @@
 import json
 import os
 import smtplib
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
@@ -20,6 +20,13 @@ SENDER_APP_PASSWORD = os.environ["YAHOO_APP_PASSWORD"]
 RECIPIENT_EMAILS = ["jasonmctigue@live.ie", "creidy@thegrace.ie"]
 STATE_FILE = "seen_reviews.json"
 
+# A review only counts as "new" if it was published within this window. Reviews
+# older than this are pre-existing ones rotating into the API's relevance-ranked
+# window (the APIs return ~5 reviews by relevance, not by date), not genuinely
+# new reviews — alerting on them would be a false alarm. The window is generous
+# so a review delayed by TripAdvisor moderation still alerts once it appears.
+MAX_AGE_DAYS = 45
+
 
 def load_state():
     if os.path.exists(STATE_FILE):
@@ -30,8 +37,6 @@ def load_state():
         "tripadvisor_ids": [],
         "google_times": [],
         "google_place_id": None,
-        "google_last_publish": None,
-        "tripadvisor_last_publish": None,
     }
 
 
@@ -56,24 +61,22 @@ def parse_ts(s):
         return None
 
 
-def newest_publish(times):
-    """Return the newest parseable timestamp string from a list, or None."""
-    dated = [(parse_ts(t), t) for t in times if parse_ts(t)]
-    return max(dated, key=lambda x: x[0])[1] if dated else None
+def is_recent(ts):
+    """True if a review was published within MAX_AGE_DAYS of now.
 
-
-def is_newer(ts, watermark):
-    """True if review timestamp ts is strictly newer than the stored watermark.
-
-    A missing watermark (first run after this change) bootstraps without
-    treating already-present reviews as new — ID dedup handles those.
+    Used to tell a genuinely new review apart from an old one that has merely
+    rotated into the API's relevance-ranked window with an ID we hadn't recorded
+    yet. Unlike a high-water mark, this never suppresses a new review just
+    because an even-newer one was seen first (relevance ordering and moderation
+    delays mean reviews routinely appear out of date order). An unparseable or
+    missing timestamp errs toward alerting rather than silently dropping.
     """
-    if watermark is None:
+    t = parse_ts(ts)
+    if t is None:
         return True
-    a, b = parse_ts(ts), parse_ts(watermark)
-    if a is None or b is None:
-        return True
-    return a > b
+    if t.tzinfo is None:
+        t = t.replace(tzinfo=timezone.utc)
+    return datetime.now(timezone.utc) - t <= timedelta(days=MAX_AGE_DAYS)
 
 
 def save_state(state):
@@ -201,19 +204,14 @@ def main():
     if place_id:
         state["google_place_id"] = place_id
         seen_ids = set(state.get("google_times", []))
-        watermark = state.get("google_last_publish")
-        google_reviews = get_google_reviews(place_id)
-        batch_newest = newest_publish([r.get("publishTime") for r in google_reviews])
         # Google returns only ~5 reviews ranked by relevance, not date, so an old
-        # review can rotate back in with an unseen ID. Only alert when it's newer
-        # than the latest we've seen. On the first run after this lands there is no
-        # watermark yet, so baseline from the current batch — that way stale reviews
-        # rotating in don't fire a one-time false alert before the watermark exists.
-        effective = watermark if watermark is not None else batch_newest
-        for r in google_reviews:
+        # review can rotate back in with an unseen ID. Alert on unseen IDs, but
+        # skip any that are older than MAX_AGE_DAYS — those are pre-existing
+        # reviews surfacing, not new ones.
+        for r in get_google_reviews(place_id):
             rid = r.get("name", "")
             if rid and rid not in seen_ids:
-                if state["initialized"] and is_newer(r.get("publishTime"), effective):
+                if state["initialized"] and is_recent(r.get("publishTime")):
                     new_reviews["Google"].append({
                         "author": r.get("authorAttribution", {}).get("displayName", "Anonymous"),
                         "rating": str(r.get("rating", "?")),
@@ -223,26 +221,18 @@ def main():
                     })
                 seen_ids.add(rid)
         state["google_times"] = list(seen_ids)
-        if batch_newest and is_newer(batch_newest, watermark):
-            state["google_last_publish"] = batch_newest
     else:
         print("Warning: Could not find Google Place ID — check your API key")
 
     # TripAdvisor Reviews
     seen_ids = set(str(i) for i in state.get("tripadvisor_ids", []))
-    watermark = state.get("tripadvisor_last_publish")
-    ta_reviews = get_tripadvisor_reviews()
-    batch_newest = newest_publish([r.get("_published") for r in ta_reviews])
-    effective = watermark if watermark is not None else batch_newest
-    for r in ta_reviews:
+    for r in get_tripadvisor_reviews():
         rid = str(r["id"])
         if rid not in seen_ids:
-            if state["initialized"] and is_newer(r.get("_published"), effective):
+            if state["initialized"] and is_recent(r.get("_published")):
                 new_reviews["TripAdvisor"].append(r)
             seen_ids.add(rid)
     state["tripadvisor_ids"] = list(seen_ids)
-    if batch_newest and is_newer(batch_newest, watermark):
-        state["tripadvisor_last_publish"] = batch_newest
 
     if not state["initialized"]:
         state["initialized"] = True
