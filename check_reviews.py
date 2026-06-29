@@ -282,5 +282,22 @@ if __name__ == "__main__":
             print("Test email sent with real latest reviews.")
         else:
             print("No reviews found to send.")
+    elif "--debug" in sys.argv:
+        # Read-only: dump exactly what each API returns, newest first. Sends no
+        # email and does not touch state. Used to see whether recent reviews are
+        # even retrievable (Google Places returns only ~5, ranked by relevance).
+        state = load_state()
+        place_id = state.get("google_place_id") or get_google_place_id()
+        print(f"\n=== GOOGLE (place {place_id}) ===")
+        g = get_google_reviews(place_id) if place_id else []
+        for r in sorted(g, key=lambda r: r.get("publishTime", ""), reverse=True):
+            print(f"  {r.get('publishTime','?')}  {r.get('rating','?')}★  "
+                  f"{r.get('authorAttribution',{}).get('displayName','Anonymous')}  "
+                  f"| {r.get('text',{}).get('text','')[:60]!r}")
+        print(f"  ({len(g)} Google reviews returned)")
+        print("\n=== TRIPADVISOR ===")
+        for r in sorted(get_tripadvisor_reviews(), key=lambda r: r.get("_published",""), reverse=True):
+            print(f"  {r.get('_published','?')}  {r.get('rating','?')}★  "
+                  f"{r.get('author','?')}  | {r.get('title','')!r}")
     else:
         main()

@@ -9,6 +9,10 @@ on:
         description: 'Send a test email'
         type: boolean
         default: false
+      debug:
+        description: 'Dump what the APIs return (no email, read-only)'
+        type: boolean
+        default: false
 
 jobs:
   check:
@@ -34,6 +38,8 @@ jobs:
         run: |
           if [ "${{ inputs.test_email }}" = "true" ]; then
             python check_reviews.py --test
+          elif [ "${{ inputs.debug }}" = "true" ]; then
+            python check_reviews.py --debug
           else
             python check_reviews.py
           fi
