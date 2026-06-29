@@ -98,12 +98,34 @@ def get_google_place_id():
 
 
 def get_google_reviews(place_id):
+    # Use the legacy Place Details endpoint with reviews_sort=newest. The Places
+    # API (New) only returns ~5 reviews ranked by relevance with no newest sort,
+    # so once the hotel had enough reviews, new ones stopped making the cut and
+    # Google alerts silently died. The legacy endpoint returns the 5 *newest*.
     resp = requests.get(
-        f"https://places.googleapis.com/v1/places/{place_id}",
-        headers={"X-Goog-Api-Key": GOOGLE_API_KEY, "X-Goog-FieldMask": "reviews"},
+        "https://maps.googleapis.com/maps/api/place/details/json",
+        params={"place_id": place_id, "fields": "reviews",
+                "reviews_sort": "newest", "key": GOOGLE_API_KEY},
         timeout=10,
     )
-    return resp.json().get("reviews", [])
+    data = resp.json()
+    print(f"Google Details API status: {resp.status_code} — {data.get('status')}")
+    reviews = []
+    for r in data.get("result", {}).get("reviews", []):
+        # Legacy reviews have no stable resource id; synthesise one from the
+        # author and unix review time so dedup still works.
+        t = r.get("time")
+        publish = (datetime.fromtimestamp(t, tz=timezone.utc).isoformat()
+                   if isinstance(t, (int, float)) else "")
+        reviews.append({
+            "name": f"google:{r.get('author_name', '')}:{t}",
+            "authorAttribution": {"displayName": r.get("author_name", "Anonymous")},
+            "rating": r.get("rating", "?"),
+            "text": {"text": r.get("text", "")},
+            "relativePublishTimeDescription": r.get("relative_time_description", ""),
+            "publishTime": publish,
+        })
+    return reviews
 
 
 def get_tripadvisor_reviews():
