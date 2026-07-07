@@ -18,7 +18,7 @@ jobs:
   check:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: read
 
     steps:
       - uses: actions/checkout@v4
@@ -29,6 +29,20 @@ jobs:
 
       - name: Install dependencies
         run: pip install -r requirements.txt
+
+      # Persist "seen reviews" state via the Actions cache instead of committing
+      # it back to the repo (which spammed main with a commit every 30 min).
+      # The rotating run_id key means each run writes a fresh cache entry;
+      # restore-keys falls back to the most recent prior one. On a cache miss
+      # the seen_reviews.json committed in the repo acts as the seed, so state
+      # is never lost — worst case the run re-uses the seed and re-initialises.
+      - name: Restore review state
+        uses: actions/cache/restore@v4
+        with:
+          path: seen_reviews.json
+          key: seen-reviews-${{ github.run_id }}
+          restore-keys: |
+            seen-reviews-
 
       - name: Run review checker
         env:
@@ -44,12 +58,10 @@ jobs:
             python check_reviews.py
           fi
 
-      - name: Save state
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add seen_reviews.json
-          git diff --staged --quiet || git commit -m "chore: update seen reviews state"
-          git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git
+      # Only real runs mutate state; test/debug are read-only, so skip saving.
+      - name: Save review state
+        if: ${{ inputs.test_email != true && inputs.debug != true }}
+        uses: actions/cache/save@v4
+        with:
+          path: seen_reviews.json
+          key: seen-reviews-${{ github.run_id }}
