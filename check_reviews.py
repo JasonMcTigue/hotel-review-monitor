@@ -23,9 +23,10 @@ STATE_FILE = "seen_reviews.json"
 # A review only counts as "new" if it was published within this window. Reviews
 # older than this are pre-existing ones rotating into the API's relevance-ranked
 # window (the APIs return ~5 reviews by relevance, not by date), not genuinely
-# new reviews — alerting on them would be a false alarm. The window is generous
-# so a review delayed by TripAdvisor moderation still alerts once it appears.
-MAX_AGE_DAYS = 45
+# new reviews — alerting on them would be a false alarm. Kept tight so only
+# genuinely recent reviews alert, while still leaving a few days' slack for a
+# review delayed by TripAdvisor moderation to appear before the window closes.
+MAX_AGE_DAYS = 7
 
 
 def load_state():
