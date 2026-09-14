@@ -102,10 +102,12 @@ GitHub Pages can't restrict access on a personal account — that needs Enterpri
 
 What this does and doesn't buy you:
 
-- The lock screen names neither the hotel nor anyone else, and carries `noindex`
+- The lock screen names neither the hotel nor anyone else, and carries `noindex` — that applies to its script too, so the `localStorage` key is deliberately generic
+- The logo spells out the hotel's name, so it is inlined into the stylesheet from `assets/logo-mask.png` rather than shipped to `docs/` as its own file, where it would sit in the clear beside the lock screen
 - The ciphertext is world-downloadable, so security rests entirely on passphrase strength — it's a strong random passphrase, and the iteration count makes offline guessing expensive
-- To rotate: update the secret and re-run the workflow
-- Encryption uses a fresh salt and IV each build, so the page is only rewritten when the underlying data actually changes (tracked in `docs/.content-hash`) — otherwise every run would commit a new file
+- **This repo is public, so `reviews.json` already publishes every review in the clear.** The gate protects the rendered dashboard, not the underlying data — making the repo private is what would close that gap
+- To rotate: update the secret and re-run the workflow. GitHub never reads a secret back, so keep a copy somewhere you can recover it
+- Encryption uses a fresh salt and IV each build, so the page is only rewritten when what it contains actually changes (data, markup, stylesheet, logo or gate — tracked in `docs/.content-hash`) — otherwise every run would commit a new file
 
 ## Weekly digest and heartbeat
 

@@ -24,6 +24,22 @@ HOTEL_NAME = "The Grace Westport Estate"
 HISTORY_FILE = "reviews.json"
 OUTPUT_FILE = os.path.join("docs", "index.html")
 MONTHS_SHOWN = 6
+LOGO_FILE = os.path.join("assets", "logo-mask.png")
+
+
+def logo_mask():
+    """The logo as a base64 alpha mask, inlined into the stylesheet.
+
+    It is a mask rather than a picture so CSS supplies the colour, which keeps
+    the wordmark legible on the dark theme and the file to one channel.
+
+    Inlining is not an optimisation: the mark spells out the hotel's name, so
+    shipping it to docs/ as its own file would identify the property in
+    cleartext next to the lock screen. Embedded here it travels inside the
+    ciphertext like the rest of the page.
+    """
+    with open(LOGO_FILE, "rb") as f:
+        return "data:image/png;base64," + base64.b64encode(f.read()).decode()
 
 
 def rating_int(value):
@@ -119,6 +135,7 @@ STYLE = """
     --rule:        #e1e0d9;
     --baseline:    #c3c2b7;
     --accent:      #1f4d3d;
+    --logo-ink:    #485d60;
     --series-1:    #2a78d6;
     --series-2:    #eb6834;
     --critical:    #d03b3b;
@@ -139,6 +156,7 @@ STYLE = """
       --rule:     #2c2c2a;
       --baseline: #383835;
       --accent:   #7fbfa4;
+      --logo-ink: #a7bec1;
       --series-1: #3987e5;
       --series-2: #d95926;
       --critical: #d03b3b;
@@ -157,6 +175,7 @@ STYLE = """
     --rule:     #2c2c2a;
     --baseline: #383835;
     --accent:   #7fbfa4;
+    --logo-ink: #a7bec1;
     --series-1: #3987e5;
     --series-2: #d95926;
     --critical: #d03b3b;
@@ -196,6 +215,23 @@ STYLE = """
               padding-bottom: 14px; }
   .masthead h1 { font-family: var(--display); font-weight: 600; font-size: 27px;
                  margin: 0; letter-spacing: -0.01em; text-wrap: balance; }
+  /* The logo is painted as a mask so the wordmark picks up --logo-ink and
+     stays legible on the dark theme; a flat screenshot would go invisible.
+     The h1 keeps the name as text for screen readers and as the fallback
+     wherever mask-image is unsupported. */
+  .masthead h1 .logo { display: block; width: 190px; max-width: 100%;
+                       aspect-ratio: 380 / 178; background-color: var(--logo-ink);
+                       -webkit-mask-image: var(--logo-mask); mask-image: var(--logo-mask);
+                       -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+                       -webkit-mask-size: contain; mask-size: contain;
+                       -webkit-mask-position: left center; mask-position: left center; }
+  @supports not (mask-image: var(--logo-mask)) {
+    .masthead h1 .logo { display: none; }
+    .masthead h1 .vh { position: static; width: auto; height: auto;
+                       clip-path: none; white-space: normal; }
+  }
+  .vh { position: absolute; width: 1px; height: 1px; overflow: hidden;
+        clip-path: inset(50%); white-space: nowrap; }
   .eyebrow { font-size: 11px; letter-spacing: 0.13em; text-transform: uppercase;
              color: var(--muted); margin: 0 0 2px; }
   .feeds { display: flex; gap: 8px; flex-wrap: wrap; }
@@ -277,10 +313,14 @@ def stars(n):
     return "★" * n + "☆" * (5 - n)
 
 
-HEAD = f"""<title>Grace Westport Reviews</title>
+def head():
+    """Document head. A function, not a constant, so the logo is read from
+    disk when the page is built rather than when the module is imported."""
+    return f"""<title>Grace Westport Reviews</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>:root {{ --logo-mask: url("{logo_mask()}"); }}</style>
 {STYLE}"""
 
 
@@ -332,7 +372,7 @@ def render_content(d):
   <header class="masthead">
     <div>
       <p class="eyebrow">Review monitor</p>
-      <h1>{esc(d["hotel"])}</h1>
+      <h1><span class="vh">{esc(d["hotel"])}</span><span class="logo" aria-hidden="true"></span></h1>
     </div>
     <div class="feeds">{feeds}</div>
   </header>
@@ -554,7 +594,10 @@ GATE = """<!doctype html>
 </main>
 <script>
 const PAYLOAD = __PAYLOAD__;
-const STORE = "grace-reviews-pass";
+// Deliberately anonymous. Everything in this script ships in cleartext, so a
+// key named after the property would identify it to anyone who opened the
+// page source or their own devtools -- as would a comment spelling it out.
+const STORE = "dashboard-pass";
 const form = document.getElementById("unlock-form");
 const pw = document.getElementById("pw");
 const go = document.getElementById("go");
@@ -638,21 +681,30 @@ def full_page(content):
     return ('<!doctype html>\n<html lang="en">\n<head>\n'
             '<meta charset="utf-8">\n'
             '<meta name="viewport" content="width=device-width, initial-scale=1">\n'
-            f'{HEAD}\n</head>\n<body>\n{content}\n</body>\n</html>\n')
+            f'{head()}\n</head>\n<body>\n{content}\n</body>\n</html>\n')
 
 
 HASH_FILE = os.path.join("docs", ".content-hash")
 
 
 def content_hash(data):
-    """Fingerprint the dashboard's data, ignoring the build timestamp.
+    """Fingerprint what the published page will contain.
 
     Encryption uses a fresh random salt and IV each time, so the ciphertext
     changes on every run even when nothing else has. Without this check the
     workflow would commit a new index.html every 6 hours forever.
+
+    The fingerprint covers everything that lands in the file — the data, the
+    rendered markup and the lock screen — so a change to the template, the
+    stylesheet, the logo or the gate republishes too. Hashing the data alone
+    would leave presentation edits stranded behind a page that never gets
+    rewritten. The build timestamp is pinned to a constant first, since it
+    moves on every run and would defeat the check.
     """
-    payload = {k: v for k, v in data.items() if k != "generated"}
-    return hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()
+    stable = dict(data, generated="")
+    return hashlib.sha256(
+        (json.dumps(stable, sort_keys=True) + full_page(render_content(stable)) + GATE)
+        .encode()).hexdigest()
 
 
 def main():
@@ -671,7 +723,7 @@ def main():
     if "--artifact" in sys.argv:
         path = sys.argv[sys.argv.index("--artifact") + 1]
         with open(path, "w") as f:
-            f.write(HEAD + "\n" + content)
+            f.write(head() + "\n" + content)
         print(f"Wrote artifact page: {path}")
         return
 
