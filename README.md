@@ -69,6 +69,8 @@ The legacy Tripadvisor Content API was sunset on **31 August 2026** and now retu
 
 ## When a feed breaks
 
+See [INCIDENT.md](INCIDENT.md) for the September 2026 write-up: three stacked failures over six weeks, none of which produced a single failed run.
+
 If either API refuses a request, that platform's error is printed and the run **fails** (exit 1), so GitHub emails you about the failed workflow. The other platform is still checked and can still alert — one dead feed doesn't take the other down.
 
 This matters: previously a refused API returned an empty list, which was indistinguishable from "no new reviews", so the run went green. Google alerts were dead for six weeks before anyone noticed.
