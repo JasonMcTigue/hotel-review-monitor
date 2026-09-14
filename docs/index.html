@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Grace Westport Reviews</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+
+<style>
+  :root {
+    color-scheme: light;
+    --page:        #f7f8f6;
+    --surface:     #fcfcfb;
+    --ink:         #0b0b0b;
+    --ink-2:       #52514e;
+    --muted:       #898781;
+    --rule:        #e1e0d9;
+    --baseline:    #c3c2b7;
+    --accent:      #1f4d3d;
+    --series-1:    #2a78d6;
+    --series-2:    #eb6834;
+    --critical:    #d03b3b;
+    --good:        #0ca30c;
+    --ring:        rgba(11,11,11,0.10);
+    --shadow:      0 1px 2px rgba(11,11,11,0.05);
+    --display: "Fraunces", Georgia, "Times New Roman", serif;
+    --ui: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --page:     #0d0d0d;
+      --surface:  #1a1a19;
+      --ink:      #ffffff;
+      --ink-2:    #c3c2b7;
+      --muted:    #898781;
+      --rule:     #2c2c2a;
+      --baseline: #383835;
+      --accent:   #7fbfa4;
+      --series-1: #3987e5;
+      --series-2: #d95926;
+      --critical: #d03b3b;
+      --good:     #0ca30c;
+      --ring:     rgba(255,255,255,0.10);
+      --shadow:   none;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --page:     #0d0d0d;
+    --surface:  #1a1a19;
+    --ink:      #ffffff;
+    --ink-2:    #c3c2b7;
+    --muted:    #898781;
+    --rule:     #2c2c2a;
+    --baseline: #383835;
+    --accent:   #7fbfa4;
+    --series-1: #3987e5;
+    --series-2: #d95926;
+    --critical: #d03b3b;
+    --good:     #0ca30c;
+    --ring:     rgba(255,255,255,0.10);
+    --shadow:   none;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--page);
+    color: var(--ink);
+    font-family: var(--ui);
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding-inline: 20px;
+    padding-block: 32px 56px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+  a { color: var(--accent); }
+  a:focus-visible, button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* masthead */
+  .masthead { display: flex; flex-wrap: wrap; gap: 16px 24px; align-items: baseline;
+              justify-content: space-between; border-bottom: 2px solid var(--accent);
+              padding-bottom: 14px; }
+  .masthead h1 { font-family: var(--display); font-weight: 600; font-size: 27px;
+                 margin: 0; letter-spacing: -0.01em; text-wrap: balance; }
+  .eyebrow { font-size: 11px; letter-spacing: 0.13em; text-transform: uppercase;
+             color: var(--muted); margin: 0 0 2px; }
+  .feeds { display: flex; gap: 8px; flex-wrap: wrap; }
+  .feed { display: inline-flex; align-items: center; gap: 6px; font-size: 12px;
+          color: var(--ink-2); border: 1px solid var(--rule); border-radius: 999px;
+          padding: 3px 10px; background: var(--surface); }
+  .dot { width: 7px; height: 7px; border-radius: 50%; }
+
+  /* stat tiles */
+  .tiles { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+  .tile { background: var(--surface); border: 1px solid var(--ring); border-radius: 6px;
+          padding: 14px 16px; box-shadow: var(--shadow); }
+  .tile .label { font-size: 11px; letter-spacing: 0.09em; text-transform: uppercase;
+                 color: var(--muted); }
+  .tile .value { font-size: 30px; font-weight: 600; line-height: 1.15; margin-top: 4px;
+                 font-variant-numeric: tabular-nums; }
+  .tile .value.hero { font-size: 44px; }
+  .tile .note { font-size: 12px; color: var(--ink-2); }
+
+  /* cards */
+  .grid2 { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+  .card { background: var(--surface); border: 1px solid var(--ring); border-radius: 6px;
+          padding: 18px 18px 14px; box-shadow: var(--shadow); }
+  .card h2 { font-family: var(--display); font-size: 16px; font-weight: 600; margin: 0 0 2px; }
+  .card .sub { font-size: 12px; color: var(--muted); margin: 0 0 14px; }
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px;
+            color: var(--ink-2); margin-bottom: 10px; }
+  .swatch { width: 9px; height: 9px; border-radius: 2px; display: inline-block;
+            margin-right: 5px; vertical-align: middle; }
+  .empty { font-size: 13px; color: var(--ink-2); padding: 22px 0; text-align: center; }
+  figure { margin: 0; }
+  svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .tick { font-size: 11px; fill: var(--muted); font-family: var(--ui); }
+  .datalabel { font-size: 11px; fill: var(--ink-2); font-family: var(--ui);
+               font-variant-numeric: tabular-nums; }
+
+  .toggle { background: none; border: 1px solid var(--rule); border-radius: 4px;
+            color: var(--ink-2); font: inherit; font-size: 11px; padding: 3px 9px;
+            cursor: pointer; margin-top: 10px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 10px; }
+  th, td { text-align: left; padding: 5px 8px 5px 0; border-bottom: 1px solid var(--rule);
+           font-variant-numeric: tabular-nums; }
+  th { font-size: 11px; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted);
+       font-weight: 500; }
+
+  /* review list */
+  .reviews { display: flex; flex-direction: column; gap: 10px; }
+  .review { background: var(--surface); border: 1px solid var(--ring);
+            border-left: 3px solid var(--baseline); border-radius: 5px; padding: 13px 16px; }
+  .review.low { border-left-color: var(--critical); }
+  .review.high { border-left-color: var(--good); }
+  .review .head { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; }
+  .review .who { font-weight: 600; }
+  .review .stars { color: var(--series-2); letter-spacing: 1px; font-size: 13px; }
+  .review .meta { font-size: 12px; color: var(--muted); margin-left: auto;
+                  font-variant-numeric: tabular-nums; }
+  .chip { font-size: 11px; border: 1px solid var(--rule); border-radius: 3px;
+          padding: 1px 6px; color: var(--ink-2); }
+  .chip.warn { border-color: var(--critical); color: var(--critical); }
+  .review .quote { margin: 7px 0 0; color: var(--ink-2); }
+  .review .quote strong { color: var(--ink); font-weight: 600; }
+
+  footer { border-top: 1px solid var(--rule); padding-top: 14px; font-size: 12px;
+           color: var(--muted); display: flex; flex-direction: column; gap: 4px; }
+
+  #tip { position: fixed; pointer-events: none; opacity: 0; transition: opacity .1s;
+         background: var(--ink); color: var(--page); font-size: 12px; line-height: 1.4;
+         padding: 6px 9px; border-radius: 4px; z-index: 10; max-width: 220px; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header class="masthead">
+    <div>
+      <p class="eyebrow">Review monitor</p>
+      <h1>The Grace Westport Estate</h1>
+    </div>
+    <div class="feeds"><span class="feed"><span class="dot" style="background:var(--series-1)"></span>Google · 5</span><span class="feed"><span class="dot" style="background:var(--series-2)"></span>TripAdvisor · 3</span></div>
+  </header>
+
+  <section class="tiles"><div class="tile"><div class="label">Average rating</div><div class="value hero">4.6</div><div class="note">across 8 reviews</div></div><div class="tile"><div class="label">Last 30 days</div><div class="value ">8</div><div class="note">averaging 4.6 ★</div></div><div class="tile"><div class="label">Most recent</div><div class="value ">3 days ago</div><div class="note">2026-09-10</div></div><div class="tile"><div class="label">1–2 star reviews</div><div class="value ">0</div><div class="note">none on record</div></div></section>
+
+  <section class="grid2">
+    <div class="card">
+      <h2>Rating mix</h2>
+      <p class="sub">Every review on record, by star rating</p>
+      <figure id="dist"></figure>
+    </div>
+    <div class="card">
+      <h2>Reviews per month</h2>
+      <p class="sub">Volume by platform, last 6 months with activity</p>
+      <div class="legend">
+        <span><span class="swatch" style="background:var(--series-1)"></span>Google</span>
+        <span><span class="swatch" style="background:var(--series-2)"></span>TripAdvisor</span>
+      </div>
+      <figure id="months"></figure>
+      <button class="toggle" id="tableBtn" type="button" aria-expanded="false">Show data table</button>
+      <div id="monthTable" hidden></div>
+    </div>
+  </section>
+
+  <section>
+    <h2 style="font-family:var(--display);font-size:17px;margin:0 0 12px;">Latest reviews</h2>
+    <div class="reviews"><article class="review high"><div class="head"><span class="who">B1638CNlauram</span><span class="stars" aria-label="5 out of 5">★★★★★</span><span class="chip">TripAdvisor</span><span class="meta">2026-09-10</span></div><p class="quote"><strong>We Can’t Wait to Come Back.</strong> — We had the best time staying at The Grace Westport! From the moment we checked in to the moment we checked out, everything - and every person was just fantastic.
+
+A special shout-out to Mary, who made us feel so welcome and went above and beyond to make our st…</p><p class="quote"><a href="https://www.tripadvisor.com/ShowUserReviews-g186627-d34251217-r1077212590-The_Grace_Westport_Estate-Westport_County_Mayo_Western_Ireland.html">Read on TripAdvisor</a></p></article><article class="review high"><div class="head"><span class="who">clairedL2792GG</span><span class="stars" aria-label="5 out of 5">★★★★★</span><span class="chip">TripAdvisor</span><span class="meta">2026-09-08</span></div><p class="quote"><strong>Top class</strong> — We finished off our trip to Ireland in Westport and stayed at The Grace. What a perfect way to end our trip! Beautiful hotel, great atmosphere and wonderful staff. A special mention to Ciaran, whose pride in the hotel really shows and made us feel so welcome. …</p><p class="quote"><a href="https://www.tripadvisor.com/ShowUserReviews-g186627-d34251217-r1076828409-The_Grace_Westport_Estate-Westport_County_Mayo_Western_Ireland.html">Read on TripAdvisor</a></p></article><article class="review high"><div class="head"><span class="who">Amy Arduini</span><span class="stars" aria-label="5 out of 5">★★★★★</span><span class="chip">Google</span><span class="meta">2026-09-07</span></div><p class="quote">On the lovely, lush, green Isle Of Ire. I had the pleasure of staying with friends to witness the Union of Brianne and Chris.  With an amazing vibrant floral grounds, beautiful scenery and doting staff members. Shout out to all the staff who tended our wedding…</p><p class="quote"><a href="https://www.google.com/maps/contrib/108343527900968336298/reviews">Read on Google</a></p></article><article class="review high"><div class="head"><span class="who">D6332QAgeraldines</span><span class="stars" aria-label="5 out of 5">★★★★★</span><span class="chip">TripAdvisor</span><span class="meta">2026-09-07</span></div><p class="quote"><strong>A wonderful experience from morning to night!</strong> — We stayed at The Grace from August 23rd through the 26th. What a wonderful stay we had! The rooms were clean, comfortable and had everything we needed! We enjoyed the great food from  our Sunday dinner in the comfort of the cozy Kelly’s bar to our special nigh…</p><p class="quote"><a href="https://www.tripadvisor.com/ShowUserReviews-g186627-d34251217-r1076772506-The_Grace_Westport_Estate-Westport_County_Mayo_Western_Ireland.html">Read on TripAdvisor</a></p></article><article class="review high"><div class="head"><span class="who">Claire Jackson</span><span class="stars" aria-label="4 out of 5">★★★★☆</span><span class="chip">Google</span><span class="meta">2026-09-07</span></div><p class="quote">As a non resident visited the Grace for breakfast this morning. It was to.mark a special birthday so the budget stretched to 26 euro per person
+The staff were helpful, friendly and numerous. The buffet was extensive and continuously replenished and the provisi…</p><p class="quote"><a href="https://www.google.com/maps/contrib/101489759513720284601/reviews">Read on Google</a></p></article><article class="review "><div class="head"><span class="who">Kevin Hargadon</span><span class="stars" aria-label="3 out of 5">★★★☆☆</span><span class="chip">Google</span><span class="meta">2026-09-04</span></div><p class="quote"></p><p class="quote"><a href="https://www.google.com/maps/contrib/105887889868760130578/reviews">Read on Google</a></p></article><article class="review high"><div class="head"><span class="who">Faye Cusack</span><span class="stars" aria-label="5 out of 5">★★★★★</span><span class="chip">Google</span><span class="meta">2026-09-02</span></div><p class="quote">We had the most amazing stay at the Grace. We stayed for a birthday celebration and the staff could not have been more brilliant. We will definitely be back</p><p class="quote"><a href="https://www.google.com/maps/contrib/107559200489264184311/reviews">Read on Google</a></p></article><article class="review high"><div class="head"><span class="who">Emily O Reilly</span><span class="stars" aria-label="5 out of 5">★★★★★</span><span class="chip">Google</span><span class="meta">2026-08-31</span></div><p class="quote">A fabulous experience. From the moment we walked in the door. My partner and I  really could not get over how friendly and attentive the staff were. The room was immaculate and the dining was superb. The buffet breakfast was well controlled, constantly restock…</p><p class="quote"><a href="https://www.google.com/maps/contrib/111788450139105426967/reviews">Read on Google</a></p></article></div>
+  </section>
+
+  <footer>
+    <span>Updated 14 Sep 2026, 10:39 UTC · tracking since 2026-08-31</span>
+    <span>History builds forward from the first run: Google exposes only its 5 newest reviews
+          and Tripadvisor's Discover tier only 3, so earlier reviews cannot be backfilled.</span>
+    <span>Reviews and bubble ratings provided by Tripadvisor.</span>
+  </footer>
+</div>
+<div id="tip" role="status"></div>
+<script>
+const DATA = {"distribution": [{"stars": 5, "count": 6}, {"stars": 4, "count": 1}, {"stars": 3, "count": 1}, {"stars": 2, "count": 0}, {"stars": 1, "count": 0}], "months": [{"key": "2026-08", "label": "Aug", "Google": 1, "TripAdvisor": 0}, {"key": "2026-09", "label": "Sep", "Google": 4, "TripAdvisor": 3}]};
+const tip = document.getElementById("tip");
+const showTip = (evt, html) => {
+  tip.innerHTML = html;
+  tip.style.opacity = 1;
+  const pad = 12;
+  tip.style.left = Math.min(evt.clientX + pad, innerWidth - tip.offsetWidth - pad) + "px";
+  tip.style.top = Math.max(evt.clientY - tip.offsetHeight - pad, pad) + "px";
+};
+const hideTip = () => { tip.style.opacity = 0; };
+
+function distChart(el, rows) {
+  const total = rows.reduce((s, r) => s + r.count, 0);
+  if (!total) { el.innerHTML = '<p class="empty">No ratings recorded yet.</p>'; return; }
+  const max = Math.max(...rows.map(r => r.count));
+  const rowH = 30, labelW = 34, valueW = 30, w = 320;
+  const h = rows.length * rowH;
+  const track = w - labelW - valueW;
+  const bars = rows.map((r, i) => {
+    const y = i * rowH + 6;
+    const len = max ? Math.max(r.count / max * track, r.count ? 3 : 0) : 0;
+    return `<g class="bar" data-t="${r.stars} star · ${r.count} review${r.count === 1 ? "" : "s"}">
+      <text class="tick" x="0" y="${y + 13}">${r.stars}★</text>
+      <rect x="${labelW}" y="${y}" width="${track}" height="18" rx="3" fill="var(--rule)"></rect>
+      <rect x="${labelW}" y="${y}" width="${len}" height="18" rx="3" fill="var(--series-1)"></rect>
+      <text class="datalabel" x="${labelW + track + 6}" y="${y + 13}">${r.count}</text>
+    </g>`;
+  }).join("");
+  el.innerHTML = `<svg viewBox="0 0 ${w} ${h}" role="img"
+    aria-label="Rating distribution: ${rows.map(r => r.stars + " star, " + r.count).join("; ")}">${bars}</svg>`;
+}
+
+function monthChart(el, rows) {
+  if (rows.length < 2) {
+    el.innerHTML = '<p class="empty">Building history — a month-by-month trend appears once there are two months of data.</p>';
+    return;
+  }
+  const w = 340, h = 170, padL = 22, padB = 24, padT = 8;
+  const max = Math.max(...rows.map(r => r.Google + r.TripAdvisor), 1);
+  const band = (w - padL) / rows.length;
+  const barW = Math.min(band * 0.55, 44);
+  const scale = v => (h - padB - padT) * (v / max);
+  const ticks = [0, Math.ceil(max / 2), max].filter((v, i, a) => a.indexOf(v) === i);
+  const grid = ticks.map(t => {
+    const y = h - padB - scale(t);
+    return `<line x1="${padL}" x2="${w}" y1="${y}" y2="${y}" stroke="var(--rule)" stroke-width="1"></line>
+            <text class="tick" x="0" y="${y + 4}">${t}</text>`;
+  }).join("");
+  const bars = rows.map((r, i) => {
+    const x = padL + band * i + (band - barW) / 2;
+    const gH = scale(r.Google), tH = scale(r.TripAdvisor);
+    const gY = h - padB - gH;
+    const tY = gY - tH - (gH && tH ? 2 : 0);
+    return `<g class="bar" data-t="<b>${r.label}</b><br>Google ${r.Google} · TripAdvisor ${r.TripAdvisor}">
+      <rect x="${x}" y="${gY}" width="${barW}" height="${gH}" rx="3" fill="var(--series-1)"></rect>
+      <rect x="${x}" y="${tY}" width="${barW}" height="${tH}" rx="3" fill="var(--series-2)"></rect>
+      <text class="tick" x="${x + barW / 2}" y="${h - 8}" text-anchor="middle">${r.label}</text>
+    </g>`;
+  }).join("");
+  el.innerHTML = `<svg viewBox="0 0 ${w} ${h}" role="img"
+    aria-label="Reviews per month: ${rows.map(r => r.label + ", " + (r.Google + r.TripAdvisor)).join("; ")}">${grid}${bars}</svg>`;
+}
+
+distChart(document.getElementById("dist"), DATA.distribution);
+monthChart(document.getElementById("months"), DATA.months);
+
+document.querySelectorAll(".bar").forEach(g => {
+  g.addEventListener("mousemove", e => showTip(e, g.dataset.t));
+  g.addEventListener("mouseleave", hideTip);
+});
+
+const btn = document.getElementById("tableBtn"), box = document.getElementById("monthTable");
+box.innerHTML = `<table><thead><tr><th>Month</th><th>Google</th><th>TripAdvisor</th><th>Total</th></tr></thead>
+  <tbody>${DATA.months.map(r => `<tr><td>${r.label}</td><td>${r.Google}</td>
+  <td>${r.TripAdvisor}</td><td>${r.Google + r.TripAdvisor}</td></tr>`).join("")}</tbody></table>`;
+btn.addEventListener("click", () => {
+  const open = box.hidden;
+  box.hidden = !open;
+  btn.setAttribute("aria-expanded", String(open));
+  btn.textContent = open ? "Hide data table" : "Show data table";
+});
+</script>
+
+</body>
+</html>
