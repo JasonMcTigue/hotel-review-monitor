@@ -22,7 +22,7 @@ jobs:
   check:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
 
     steps:
       - uses: actions/checkout@v4
@@ -33,20 +33,6 @@ jobs:
 
       - name: Install dependencies
         run: pip install -r requirements.txt
-
-      # Persist "seen reviews" state via the Actions cache instead of committing
-      # it back to the repo (which spammed main with a commit every 30 min).
-      # The rotating run_id key means each run writes a fresh cache entry;
-      # restore-keys falls back to the most recent prior one. On a cache miss
-      # the seen_reviews.json committed in the repo acts as the seed, so state
-      # is never lost — worst case the run re-uses the seed and re-initialises.
-      - name: Restore review state
-        uses: actions/cache/restore@v4
-        with:
-          path: seen_reviews.json
-          key: seen-reviews-${{ github.run_id }}
-          restore-keys: |
-            seen-reviews-
 
       - name: Run review checker
         env:
@@ -62,17 +48,31 @@ jobs:
             python check_reviews.py
           fi
 
-      # Only real runs mutate state; test/debug are read-only, so skip saving.
+      # Review history now lives in the repo rather than the Actions cache:
+      # caches are evicted after 7 days unused, which would silently destroy
+      # the history the dashboard and weekly digest are built on. Only real
+      # runs mutate it; test and debug are read-only.
       #
       # !cancelled() is load-bearing. An `if:` without a status function has an
-      # implicit success(), which would skip this step whenever the checker
-      # exits non-zero — and the checker now exits non-zero whenever *either*
-      # feed fails. State would then never persist while one API was down, so
-      # the healthy platform's reviews would stay unseen and re-alert on every
-      # run. The checker saves state before exiting, so saving here is correct.
-      - name: Save review state
+      # implicit success(), which would skip these steps whenever the checker
+      # exits non-zero — and it exits non-zero whenever *either* feed fails.
+      # History would then never persist while one API was down, so the healthy
+      # platform's reviews would stay unseen and re-alert on every run.
+      - name: Rebuild dashboard
         if: ${{ !cancelled() && inputs.test_email != true && inputs.debug != true }}
-        uses: actions/cache/save@v4
-        with:
-          path: seen_reviews.json
-          key: seen-reviews-${{ github.run_id }}
+        run: python dashboard.py
+
+      - name: Commit review history and dashboard
+        if: ${{ !cancelled() && inputs.test_email != true && inputs.debug != true }}
+        run: |
+          if [ -z "$(git status --porcelain reviews.json docs)" ]; then
+            echo "No new reviews — nothing to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reviews.json docs
+          git commit -m "Record new reviews and refresh dashboard"
+          # The keepalive job also pushes to main; rebase rather than fail.
+          git pull --rebase --autostash origin main
+          git push

@@ -6,8 +6,15 @@ Automatically monitors Google and TripAdvisor reviews for **** and sends email a
 
 - Runs every 6 hours via GitHub Actions
 - Checks Google Places and Tripadvisor Terra for new reviews
-- Sends an HTML email alert with review details
-- Highlights 1-2 star reviews with a red border for quick visibility
+- Emails an HTML alert with review details; 1–2 star reviews get their own escalated email
+- Records every review it sees in `reviews.json` and rebuilds a dashboard from it
+- Emails a digest each Monday and shouts if the monitor itself goes quiet
+
+| Workflow | Schedule | Does |
+|---|---|---|
+| `check-reviews.yml` | every 6 hours | fetch reviews, alert, update history + dashboard |
+| `maintenance.yml` | daily 08:00 UTC | heartbeat check; weekly digest on Mondays |
+| `keepalive.yml` | 1st & 21st | keep the schedules from being disabled for inactivity |
 
 ## Setup
 
@@ -68,9 +75,30 @@ This matters: previously a refused API returned an empty list, which was indisti
 
 GitHub disables scheduled workflows after 60 days with no repository activity — this is what stopped the monitor in September 2026. `keepalive.yml` pushes an empty commit on the 1st and 21st of each month to reset that timer, and re-enables `check-reviews.yml` via the API if it was disabled anyway.
 
+## Review history
+
+`reviews.json` is the single source of truth — "have we seen this review" is derived from it, so there is no separate state file to drift out of sync. It lives in git rather than the Actions cache because caches are evicted after 7 days unused, which would silently destroy the history the dashboard and digest are built on.
+
+History builds **forward from the first run**. Neither platform can be backfilled: Google returns only its 5 newest reviews, and Tripadvisor's Discover tier returns only 3 per location no matter what `size` you ask for.
+
+## Dashboard
+
+`dashboard.py` renders `docs/index.html` from `reviews.json` on every run — no API calls. It shows average rating, 30-day volume, rating mix, reviews per month by platform, and the latest reviews with 1–2 star ones striped for attention.
+
+```
+python dashboard.py                      # writes docs/index.html
+python dashboard.py --artifact page.html # same page, no document wrapper
+```
+
+## Weekly digest and heartbeat
+
+- **Digest** (Mondays): counts, averages for the week and last 30 days, anything rated 3 or below, and the week's reviews. Built from stored history, so it costs nothing.
+- **Heartbeat** (daily): checks when `check-reviews.yml` last succeeded and emails if that was over 24 hours ago. This catches *silence* — a schedule disabled for inactivity produces no failed run to notice, which is exactly how six weeks of missing Google alerts went unspotted.
+
 ## Email format
 
 - One card per new review showing author, star rating, title, and text
 - Green left border for positive reviews (3-5 stars)
 - Red left border for negative reviews (1-2 stars)
+- 1–2 star reviews are split into their own **⚠️ Negative review** email so they are never buried in a batch of praise
 - Grouped by platform (Google / TripAdvisor)

@@ -1,0 +1,58 @@
+name: Maintenance
+
+# Two jobs that cost no review-API calls: a daily check that the monitor is
+# still alive, and a Monday digest built entirely from stored history.
+on:
+  schedule:
+    - cron: '0 8 * * *'
+  workflow_dispatch:
+    inputs:
+      digest:
+        description: 'Send the weekly digest now, whatever day it is'
+        type: boolean
+        default: false
+
+jobs:
+  heartbeat:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install -r requirements.txt
+
+      # Catches silence rather than failure: a schedule disabled for
+      # inactivity produces no failed run to notice, which is how six weeks of
+      # Google alerts went missing before anyone spotted it.
+      - name: Check the monitor is still reporting
+        env:
+          YAHOO_APP_PASSWORD: ${{ secrets.YAHOO_APP_PASSWORD }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python check_reviews.py --heartbeat
+
+  digest:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install -r requirements.txt
+
+      - name: Send weekly digest on Mondays
+        env:
+          YAHOO_APP_PASSWORD: ${{ secrets.YAHOO_APP_PASSWORD }}
+        run: |
+          if [ "$(date -u +%u)" = "1" ] || [ "${{ inputs.digest }}" = "true" ]; then
+            python check_reviews.py --digest
+          else
+            echo "Not Monday — skipping digest."
+          fi
