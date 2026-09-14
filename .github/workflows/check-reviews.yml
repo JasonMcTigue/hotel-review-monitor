@@ -59,8 +59,15 @@ jobs:
           fi
 
       # Only real runs mutate state; test/debug are read-only, so skip saving.
+      #
+      # !cancelled() is load-bearing. An `if:` without a status function has an
+      # implicit success(), which would skip this step whenever the checker
+      # exits non-zero — and the checker now exits non-zero whenever *either*
+      # feed fails. State would then never persist while one API was down, so
+      # the healthy platform's reviews would stay unseen and re-alert on every
+      # run. The checker saves state before exiting, so saving here is correct.
       - name: Save review state
-        if: ${{ inputs.test_email != true && inputs.debug != true }}
+        if: ${{ !cancelled() && inputs.test_email != true && inputs.debug != true }}
         uses: actions/cache/save@v4
         with:
           path: seen_reviews.json
