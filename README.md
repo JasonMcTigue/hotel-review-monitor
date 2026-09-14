@@ -4,7 +4,7 @@ Automatically monitors Google and TripAdvisor reviews for **** and sends email a
 
 ## How it works
 
-- Runs every 2 hours via GitHub Actions
+- Runs every 6 hours via GitHub Actions
 - Checks Google Places and Tripadvisor Terra for new reviews
 - Sends an HTML email alert with review details
 - Highlights 1-2 star reviews with a red border for quick visibility
@@ -40,7 +40,7 @@ Go to **Actions → Check Hotel Reviews → Run workflow** and enable the **"Sen
 
 ## API call budget
 
-Both feeds are metered, which is why the schedule is every 2 hours (12 runs/day, ~360 calls/month per platform) rather than every 30 minutes.
+Both feeds are metered, which is why the schedule is every 6 hours (4 runs/day, ~120 calls per platform per month) rather than every 30 minutes. Reviews are only alerted on within `MAX_AGE_DAYS` (7) of publication, so a 6-hour gap between runs has no chance of missing one.
 
 | | Rate | Free allowance |
 |---|---|---|

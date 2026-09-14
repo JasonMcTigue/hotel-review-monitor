@@ -2,11 +2,11 @@ name: Check Hotel Reviews
 
 on:
   schedule:
-    # Every 2 hours. Both APIs now meter calls: Google bills the reviews field
-    # at $25/1000 with only 1000 free per month, and the Tripadvisor Terra
-    # allowance is smaller still. 12 runs a day keeps Google comfortably inside
-    # its free tier; see README for the Terra arithmetic.
-    - cron: '0 */2 * * *'
+    # Every 6 hours. Both APIs meter calls, and the Terra allowance is the
+    # binding constraint: at 4 runs a day a 100-call allowance lasts ~25 days,
+    # where 2-hourly would have burnt it in 8. Well inside MAX_AGE_DAYS, so no
+    # review can slip past the alert window between runs.
+    - cron: '0 */6 * * *'
   workflow_dispatch:
     inputs:
       test_email:
