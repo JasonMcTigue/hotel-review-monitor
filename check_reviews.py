@@ -2,6 +2,7 @@
 import json
 import os
 import smtplib
+import sys
 from datetime import datetime, timedelta, timezone
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -27,6 +28,15 @@ STATE_FILE = "seen_reviews.json"
 # genuinely recent reviews alert, while still leaving a few days' slack for a
 # review delayed by TripAdvisor moderation to appear before the window closes.
 MAX_AGE_DAYS = 7
+
+
+class ReviewFetchError(Exception):
+    """A review API refused or failed the request.
+
+    Raised instead of returning an empty list, because an empty list is
+    indistinguishable from "no new reviews" — which is how a dead Google feed
+    went unnoticed for six weeks while every run stayed green.
+    """
 
 
 def load_state():
@@ -93,9 +103,14 @@ def get_google_place_id():
         timeout=10,
     )
     data = resp.json()
-    print(f"Google API response: {resp.status_code} — {data.get('error', {}).get('message', 'ok')}")
     places = data.get("places", [])
-    return places[0]["id"] if places else None
+    if resp.status_code != 200 or not places:
+        raise ReviewFetchError(
+            f"Places search failed: HTTP {resp.status_code} — "
+            f"{data.get('error', {}).get('message') or data}"
+        )
+    print(f"Google Places search: OK — place {places[0]['id']}")
+    return places[0]["id"]
 
 
 def get_google_reviews(place_id):
@@ -110,7 +125,16 @@ def get_google_reviews(place_id):
         timeout=10,
     )
     data = resp.json()
-    print(f"Google Details API status: {resp.status_code} — {data.get('status')}")
+    status = data.get("status")
+    # The legacy endpoint answers HTTP 200 even when it refuses the request, so
+    # the real verdict is in `status`; `error_message` says *why* it refused
+    # (API not enabled for the project, key restriction, billing) and is the
+    # part that was missing when Google started returning REQUEST_DENIED.
+    if resp.status_code != 200 or status not in ("OK", "ZERO_RESULTS"):
+        raise ReviewFetchError(
+            f"Place Details failed: HTTP {resp.status_code} {status} — "
+            f"{data.get('error_message', 'no error_message returned')}"
+        )
     reviews = []
     for r in data.get("result", {}).get("reviews", []):
         # Legacy reviews have no stable resource id; synthesise one from the
@@ -126,6 +150,7 @@ def get_google_reviews(place_id):
             "relativePublishTimeDescription": r.get("relative_time_description", ""),
             "publishTime": publish,
         })
+    print(f"Google Details API: {status} — {len(reviews)} reviews")
     return reviews
 
 
@@ -136,7 +161,8 @@ def get_tripadvisor_reviews():
         timeout=10,
     )
     data = resp.json()
-    print(f"TripAdvisor API status: {resp.status_code} — {data}")
+    if resp.status_code != 200:
+        raise ReviewFetchError(f"HTTP {resp.status_code} — {data}")
     reviews = []
     for r in data.get("data", []):
         reviews.append({
@@ -148,6 +174,7 @@ def get_tripadvisor_reviews():
             "date": r.get("published_date", "")[:10],
             "_published": r.get("published_date", ""),
         })
+    print(f"TripAdvisor API: OK — {len(reviews)} reviews")
     return reviews
 
 
@@ -221,10 +248,14 @@ def send_email(new_reviews):
 def main():
     state = load_state()
     new_reviews = {"Google": [], "TripAdvisor": []}
+    # Each platform is fetched independently so one dead feed still lets the
+    # other alert, but any failure is collected and exits non-zero at the end —
+    # a broken feed must show up as a red run, not as "No new reviews found."
+    errors = []
 
     # Google Reviews
-    place_id = state.get("google_place_id") or get_google_place_id()
-    if place_id:
+    try:
+        place_id = state.get("google_place_id") or get_google_place_id()
         state["google_place_id"] = place_id
         seen_ids = set(state.get("google_times", []))
         # Google returns only ~5 reviews ranked by relevance, not date, so an old
@@ -244,42 +275,54 @@ def main():
                     })
                 seen_ids.add(rid)
         state["google_times"] = list(seen_ids)
-    else:
-        print("Warning: Could not find Google Place ID — check your API key")
+    except (ReviewFetchError, requests.RequestException) as e:
+        errors.append(f"Google: {e}")
 
     # TripAdvisor Reviews
-    seen_ids = set(str(i) for i in state.get("tripadvisor_ids", []))
-    for r in get_tripadvisor_reviews():
-        rid = str(r["id"])
-        if rid not in seen_ids:
-            if state["initialized"] and is_recent(r.get("_published")):
-                new_reviews["TripAdvisor"].append(r)
-            seen_ids.add(rid)
-    state["tripadvisor_ids"] = list(seen_ids)
+    try:
+        seen_ids = set(str(i) for i in state.get("tripadvisor_ids", []))
+        for r in get_tripadvisor_reviews():
+            rid = str(r["id"])
+            if rid not in seen_ids:
+                if state["initialized"] and is_recent(r.get("_published")):
+                    new_reviews["TripAdvisor"].append(r)
+                seen_ids.add(rid)
+        state["tripadvisor_ids"] = list(seen_ids)
+    except (ReviewFetchError, requests.RequestException) as e:
+        errors.append(f"TripAdvisor: {e}")
 
     if not state["initialized"]:
-        state["initialized"] = True
-        print("First run complete — existing reviews recorded. Will alert on new reviews from now on.")
+        # Only claim a baseline once both feeds have actually answered —
+        # otherwise the failing platform's existing reviews would all look new
+        # the first time it recovers.
+        if errors:
+            print("First run incomplete — baseline not recorded while a feed is failing.")
+        else:
+            state["initialized"] = True
+            print("First run complete — existing reviews recorded. Will alert on new reviews from now on.")
     else:
         total = sum(len(v) for v in new_reviews.values())
         if total > 0:
             send_email(new_reviews)
-        else:
+        elif not errors:
             print("No new reviews found.")
 
     save_state(state)
 
+    if errors:
+        for e in errors:
+            print(f"ERROR: {e}")
+        sys.exit(1)
+
 
 if __name__ == "__main__":
-    import sys
     if "--test" in sys.argv:
         test_reviews = {"Google": [], "TripAdvisor": []}
+        errors = []
 
-        place_id = get_google_place_id()
-        print(f"Google Place ID: {place_id}")
-        if place_id:
+        try:
+            place_id = get_google_place_id()
             reviews = get_google_reviews(place_id)
-            print(f"Google reviews fetched: {len(reviews)}")
             if reviews:
                 r = reviews[0]
                 test_reviews["Google"].append({
@@ -289,38 +332,59 @@ if __name__ == "__main__":
                     "date": r.get("relativePublishTimeDescription", ""),
                     "title": "",
                 })
-        else:
-            print("Warning: Could not find Google Place ID — check your API key")
+        except (ReviewFetchError, requests.RequestException) as e:
+            errors.append(f"Google: {e}")
 
-        ta_reviews = get_tripadvisor_reviews()
-        print(f"TripAdvisor reviews fetched: {len(ta_reviews)}")
-        if ta_reviews:
-            test_reviews["TripAdvisor"].append(ta_reviews[0])
-            low = next((r for r in ta_reviews if int(float(r["rating"])) <= 2), None)
-            if low and low != ta_reviews[0]:
-                test_reviews["TripAdvisor"].append(low)
+        try:
+            ta_reviews = get_tripadvisor_reviews()
+            if ta_reviews:
+                test_reviews["TripAdvisor"].append(ta_reviews[0])
+                low = next((r for r in ta_reviews if int(float(r["rating"])) <= 2), None)
+                if low and low != ta_reviews[0]:
+                    test_reviews["TripAdvisor"].append(low)
+        except (ReviewFetchError, requests.RequestException) as e:
+            errors.append(f"TripAdvisor: {e}")
 
         if any(test_reviews.values()):
             send_email(test_reviews)
             print("Test email sent with real latest reviews.")
         else:
             print("No reviews found to send.")
+
+        for e in errors:
+            print(f"ERROR: {e}")
+        if errors:
+            sys.exit(1)
     elif "--debug" in sys.argv:
         # Read-only: dump exactly what each API returns, newest first. Sends no
         # email and does not touch state. Used to see whether recent reviews are
         # even retrievable (Google Places returns only ~5, ranked by relevance).
         state = load_state()
-        place_id = state.get("google_place_id") or get_google_place_id()
-        print(f"\n=== GOOGLE (place {place_id}) ===")
-        g = get_google_reviews(place_id) if place_id else []
-        for r in sorted(g, key=lambda r: r.get("publishTime", ""), reverse=True):
-            print(f"  {r.get('publishTime','?')}  {r.get('rating','?')}★  "
-                  f"{r.get('authorAttribution',{}).get('displayName','Anonymous')}  "
-                  f"| {r.get('text',{}).get('text','')[:60]!r}")
-        print(f"  ({len(g)} Google reviews returned)")
+        errors = []
+
+        print(f"\n=== GOOGLE (place {state.get('google_place_id')}) ===")
+        try:
+            place_id = state.get("google_place_id") or get_google_place_id()
+            g = get_google_reviews(place_id)
+            for r in sorted(g, key=lambda r: r.get("publishTime", ""), reverse=True):
+                print(f"  {r.get('publishTime','?')}  {r.get('rating','?')}★  "
+                      f"{r.get('authorAttribution',{}).get('displayName','Anonymous')}  "
+                      f"| {r.get('text',{}).get('text','')[:60]!r}")
+            print(f"  ({len(g)} Google reviews returned)")
+        except (ReviewFetchError, requests.RequestException) as e:
+            errors.append(f"Google: {e}")
+
         print("\n=== TRIPADVISOR ===")
-        for r in sorted(get_tripadvisor_reviews(), key=lambda r: r.get("_published",""), reverse=True):
-            print(f"  {r.get('_published','?')}  {r.get('rating','?')}★  "
-                  f"{r.get('author','?')}  | {r.get('title','')!r}")
+        try:
+            for r in sorted(get_tripadvisor_reviews(), key=lambda r: r.get("_published",""), reverse=True):
+                print(f"  {r.get('_published','?')}  {r.get('rating','?')}★  "
+                      f"{r.get('author','?')}  | {r.get('title','')!r}")
+        except (ReviewFetchError, requests.RequestException) as e:
+            errors.append(f"TripAdvisor: {e}")
+
+        for e in errors:
+            print(f"ERROR: {e}")
+        if errors:
+            sys.exit(1)
     else:
         main()

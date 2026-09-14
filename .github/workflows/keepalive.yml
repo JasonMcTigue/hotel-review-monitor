@@ -1,0 +1,42 @@
+name: Keepalive
+
+# GitHub disables scheduled workflows after 60 days without repository
+# activity. That is what silently stopped check-reviews.yml: the last commit
+# was 7 Jul 2026 and the schedule died exactly 60 days later, on 5 Sep 2026.
+#
+# An empty commit on the 1st and 21st of each month resets that clock with
+# three weeks of margin. It also re-enables check-reviews.yml via the API, so
+# if the schedule is ever disabled anyway it recovers on its own rather than
+# waiting to be noticed.
+on:
+  schedule:
+    - cron: '0 6 1,21 * *'
+  workflow_dispatch:
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Push an empty commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit --allow-empty -m "Keepalive: reset the scheduled-workflow inactivity timer"
+          git push
+
+      - name: Re-enable the review checker if it was disabled
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          state=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/check-reviews.yml" --jq .state)
+          echo "check-reviews.yml state: $state"
+          if [ "$state" != "active" ]; then
+            gh api -X PUT "repos/$GITHUB_REPOSITORY/actions/workflows/check-reviews.yml/enable"
+            echo "Re-enabled check-reviews.yml"
+          fi
