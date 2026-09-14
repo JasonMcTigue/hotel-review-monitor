@@ -29,6 +29,7 @@ Add the following secrets to your repository (**Settings → Secrets and variabl
 | `GOOGLE_PLACES_API_KEY` | Google Places key — needs both the legacy Places API and Places API (New) |
 | `TRIPADVISOR_API_KEY` | Tripadvisor **Terra** API key, from [tripadvisor.com/developers](https://www.tripadvisor.com/developers) |
 | `YAHOO_APP_PASSWORD` | Yahoo Mail app password |
+| `DASHBOARD_PASSWORD` | Passphrase that unlocks the published dashboard |
 
 ### 2. Google Cloud Console
 
@@ -90,9 +91,21 @@ History builds **forward from the first run**. Neither platform can be backfille
 `dashboard.py` renders `docs/index.html` from `reviews.json` on every run — no API calls. It shows average rating, 30-day volume, rating mix, reviews per month by platform, and the latest reviews with 1–2 star ones striped for attention.
 
 ```
-python dashboard.py                      # writes docs/index.html
-python dashboard.py --artifact page.html # same page, no document wrapper
+python dashboard.py                      # plain page, for local viewing
+python dashboard.py --encrypt            # passphrase-gated, what CI publishes
+python dashboard.py --artifact page.html # no document wrapper
 ```
+
+### Why it's encrypted
+
+GitHub Pages can't restrict access on a personal account — that needs Enterprise Cloud, and a Pages site built from a *private* repo is still public. So the protection lives inside the file: the page is encrypted with AES-GCM under a PBKDF2-SHA256 key (600,000 iterations), and the published file contains only ciphertext plus an unlock form. The passphrase is the `DASHBOARD_PASSWORD` secret; `--encrypt` refuses to run without it rather than publishing in the clear.
+
+What this does and doesn't buy you:
+
+- The lock screen names neither the hotel nor anyone else, and carries `noindex`
+- The ciphertext is world-downloadable, so security rests entirely on passphrase strength — it's a strong random passphrase, and the iteration count makes offline guessing expensive
+- To rotate: update the secret and re-run the workflow
+- Encryption uses a fresh salt and IV each build, so the page is only rewritten when the underlying data actually changes (tracked in `docs/.content-hash`) — otherwise every run would commit a new file
 
 ## Weekly digest and heartbeat
 

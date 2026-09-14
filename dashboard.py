@@ -2,9 +2,17 @@
 """Generate the review dashboard from reviews.json.
 
 Emits a standalone page for GitHub Pages (docs/index.html) and, with
---artifact, the same page without the document wrapper so it can be published
-as an Artifact. Reads only stored history, so it costs no API calls.
+--artifact, the same page without the document wrapper. Reads only stored
+history, so it costs no API calls.
+
+With --encrypt the page is published behind a passphrase: the dashboard is
+encrypted with AES-GCM under a PBKDF2 key and the published file holds only
+ciphertext plus an unlock form. GitHub Pages cannot restrict access on a
+personal account (that needs Enterprise Cloud), so the protection has to live
+inside the file itself.
 """
+import base64
+import hashlib
 import html
 import json
 import os
@@ -449,6 +457,177 @@ btn.addEventListener("click", () => {{
 """
 
 
+# OWASP's current floor for PBKDF2-HMAC-SHA256. Costs the reader well under a
+# second on unlock and makes offline guessing against the published ciphertext
+# expensive, which is the whole security model here.
+PBKDF2_ITERATIONS = 600_000
+
+
+def encrypt_page(plaintext, password):
+    """AES-GCM the rendered page under a PBKDF2-derived key."""
+    from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+
+    salt, iv = os.urandom(16), os.urandom(12)
+    key = hashlib.pbkdf2_hmac("sha256", password.encode(), salt, PBKDF2_ITERATIONS, 32)
+    ciphertext = AESGCM(key).encrypt(iv, plaintext.encode(), None)
+    b64 = lambda b: base64.b64encode(b).decode()
+    return {"salt": b64(salt), "iv": b64(iv), "ct": b64(ciphertext),
+            "iter": PBKDF2_ITERATIONS}
+
+
+GATE = """<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Private Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=IBM+Plex+Sans:wght@400;500&display=swap">
+<style id="gate-style">
+  :root {
+    color-scheme: light;
+    --page: #f7f8f6; --surface: #fcfcfb; --ink: #0b0b0b; --ink-2: #52514e;
+    --muted: #898781; --rule: #e1e0d9; --accent: #1f4d3d; --critical: #d03b3b;
+    --ring: rgba(11,11,11,0.10);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --page: #0d0d0d; --surface: #1a1a19; --ink: #ffffff; --ink-2: #c3c2b7;
+      --muted: #898781; --rule: #2c2c2a; --accent: #7fbfa4; --critical: #e46f6f;
+      --ring: rgba(255,255,255,0.10);
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --page: #0d0d0d; --surface: #1a1a19; --ink: #ffffff; --ink-2: #c3c2b7;
+    --muted: #898781; --rule: #2c2c2a; --accent: #7fbfa4; --critical: #e46f6f;
+    --ring: rgba(255,255,255,0.10);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; background: var(--page); color: var(--ink);
+    font-family: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+    display: flex; align-items: center; justify-content: center;
+    padding-inline: 20px; padding-block: 48px;
+  }
+  .lock {
+    background: var(--surface); border: 1px solid var(--ring); border-radius: 8px;
+    padding: 28px 26px; width: 100%; max-width: 380px;
+  }
+  .eyebrow { font-size: 11px; letter-spacing: 0.13em; text-transform: uppercase;
+             color: var(--muted); margin: 0 0 4px; }
+  h1 { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: 22px;
+       margin: 0 0 18px; letter-spacing: -0.01em; text-wrap: balance; }
+  label { display: block; font-size: 12px; color: var(--ink-2); margin-bottom: 6px; }
+  input[type=password] {
+    width: 100%; font: inherit; padding: 9px 11px; border-radius: 5px;
+    border: 1px solid var(--rule); background: var(--page); color: var(--ink);
+  }
+  .remember { display: flex; align-items: center; gap: 7px; margin: 12px 0 16px;
+              font-size: 13px; color: var(--ink-2); }
+  .remember input { margin: 0; }
+  button {
+    width: 100%; font: inherit; font-weight: 500; padding: 9px 14px; cursor: pointer;
+    border: 0; border-radius: 5px; background: var(--accent); color: var(--surface);
+  }
+  button[disabled] { opacity: 0.65; cursor: progress; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .err { color: var(--critical); font-size: 13px; margin: 12px 0 0; }
+  .hint { color: var(--muted); font-size: 12px; margin: 16px 0 0; }
+</style>
+</head>
+<body>
+<main class="lock">
+  <form id="unlock-form">
+    <p class="eyebrow">Private</p>
+    <h1>Review dashboard</h1>
+    <label for="pw">Passphrase</label>
+    <input id="pw" type="password" autocomplete="current-password" autofocus required>
+    <label class="remember"><input type="checkbox" id="remember" checked> Remember me on this device</label>
+    <button id="go" type="submit">Unlock</button>
+    <p class="err" id="err" hidden>That passphrase didn't work. Try again.</p>
+    <p class="hint">Enter the passphrase to view this dashboard.</p>
+  </form>
+</main>
+<script>
+const PAYLOAD = __PAYLOAD__;
+const STORE = "grace-reviews-pass";
+const form = document.getElementById("unlock-form");
+const pw = document.getElementById("pw");
+const go = document.getElementById("go");
+const err = document.getElementById("err");
+const remember = document.getElementById("remember");
+const bytes = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+
+async function decrypt(pass) {
+  const material = await crypto.subtle.importKey(
+    "raw", new TextEncoder().encode(pass), "PBKDF2", false, ["deriveKey"]);
+  const key = await crypto.subtle.deriveKey(
+    { name: "PBKDF2", salt: bytes(PAYLOAD.salt), iterations: PAYLOAD.iter, hash: "SHA-256" },
+    material, { name: "AES-GCM", length: 256 }, false, ["decrypt"]);
+  const plain = await crypto.subtle.decrypt(
+    { name: "AES-GCM", iv: bytes(PAYLOAD.iv) }, key, bytes(PAYLOAD.ct));
+  return new TextDecoder().decode(plain);
+}
+
+function render(markup) {
+  const tpl = document.createElement("template");
+  tpl.innerHTML = markup;
+  document.body.replaceChildren(tpl.content);
+  // Drop the lock screen's own CSS: it centres the body and stretches every
+  // button, which would follow through into the dashboard layout.
+  const gateStyle = document.getElementById("gate-style");
+  if (gateStyle) { gateStyle.remove(); }
+  // Scripts inserted via innerHTML never execute — re-create them so the
+  // charts actually draw.
+  document.body.querySelectorAll("script").forEach(old => {
+    const fresh = document.createElement("script");
+    fresh.textContent = old.textContent;
+    old.replaceWith(fresh);
+  });
+  // Take the title from the decrypted markup — hardcoding it here would name
+  // the property in cleartext on a page the whole internet can read.
+  const title = document.body.querySelector("title");
+  if (title) { document.title = title.textContent; }
+}
+
+async function attempt(pass, fromStorage) {
+  go.disabled = true;
+  go.textContent = "Unlocking\\u2026";
+  try {
+    const markup = await decrypt(pass);
+    if (remember.checked || fromStorage) {
+      try { localStorage.setItem(STORE, pass); } catch (e) {}
+    }
+    render(markup);
+    return true;
+  } catch (e) {
+    if (fromStorage) { try { localStorage.removeItem(STORE); } catch (e2) {} }
+    else { err.hidden = false; pw.select(); }
+    go.disabled = false;
+    go.textContent = "Unlock";
+    return false;
+  }
+}
+
+form.addEventListener("submit", e => {
+  e.preventDefault();
+  err.hidden = true;
+  attempt(pw.value, false);
+});
+
+let saved = null;
+try { saved = localStorage.getItem(STORE); } catch (e) {}
+if (saved) { attempt(saved, true); }
+</script>
+</body>
+</html>
+"""
+
+
 def full_page(content):
     """Standalone document for GitHub Pages.
 
@@ -462,11 +641,32 @@ def full_page(content):
             f'{HEAD}\n</head>\n<body>\n{content}\n</body>\n</html>\n')
 
 
+HASH_FILE = os.path.join("docs", ".content-hash")
+
+
+def content_hash(data):
+    """Fingerprint the dashboard's data, ignoring the build timestamp.
+
+    Encryption uses a fresh random salt and IV each time, so the ciphertext
+    changes on every run even when nothing else has. Without this check the
+    workflow would commit a new index.html every 6 hours forever.
+    """
+    payload = {k: v for k, v in data.items() if k != "generated"}
+    return hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()
+
+
 def main():
     with open(HISTORY_FILE) as f:
         history = json.load(f)
     data = summarise(history)
     content = render_content(data)
+
+    digest = content_hash(data)
+    if os.path.exists(OUTPUT_FILE) and os.path.exists(HASH_FILE) and "--artifact" not in sys.argv:
+        with open(HASH_FILE) as f:
+            if f.read().strip() == digest:
+                print("Dashboard data unchanged — leaving the published page as is.")
+                return
 
     if "--artifact" in sys.argv:
         path = sys.argv[sys.argv.index("--artifact") + 1]
@@ -475,11 +675,25 @@ def main():
         print(f"Wrote artifact page: {path}")
         return
 
+    page = full_page(content)
+
+    if "--encrypt" in sys.argv:
+        password = os.environ.get("DASHBOARD_PASSWORD", "")
+        # Refuse rather than quietly publish the dashboard in the clear: the
+        # published file is world-readable, so a missing secret would expose
+        # everything this flag exists to hide.
+        if not password:
+            sys.exit("DASHBOARD_PASSWORD is not set — refusing to publish unencrypted.")
+        page = GATE.replace("__PAYLOAD__", json.dumps(encrypt_page(page, password)))
+
     os.makedirs(os.path.dirname(OUTPUT_FILE), exist_ok=True)
     with open(OUTPUT_FILE, "w") as f:
-        f.write(full_page(content))
+        f.write(page)
+    with open(HASH_FILE, "w") as f:
+        f.write(digest + "\n")
     print(f"Wrote {OUTPUT_FILE} — {data['total']} reviews, "
-          f"{len(data['months'])} months, average {data['average']}")
+          f"{len(data['months'])} months, average {data['average']}"
+          f"{' (encrypted)' if '--encrypt' in sys.argv else ''}")
 
 
 if __name__ == "__main__":
