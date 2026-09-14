@@ -2,7 +2,11 @@ name: Check Hotel Reviews
 
 on:
   schedule:
-    - cron: '*/30 * * * *'  # every 30 minutes
+    # Every 2 hours. Both APIs now meter calls: Google bills the reviews field
+    # at $25/1000 with only 1000 free per month, and the Tripadvisor Terra
+    # allowance is smaller still. 12 runs a day keeps Google comfortably inside
+    # its free tier; see README for the Terra arithmetic.
+    - cron: '0 */2 * * *'
   workflow_dispatch:
     inputs:
       test_email:
@@ -48,7 +52,7 @@ jobs:
         env:
           GOOGLE_PLACES_API_KEY: ${{ secrets.GOOGLE_PLACES_API_KEY }}
           YAHOO_APP_PASSWORD: ${{ secrets.YAHOO_APP_PASSWORD }}
-          TRIPADVISOR_API_KEY: ${{ secrets.TRIPADVISOR_API_KE }}
+          TRIPADVISOR_API_KEY: ${{ secrets.TRIPADVISOR_API_KEY }}
         run: |
           if [ "${{ inputs.test_email }}" = "true" ]; then
             python check_reviews.py --test

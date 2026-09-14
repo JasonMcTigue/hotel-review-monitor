@@ -4,8 +4,8 @@ Automatically monitors Google and TripAdvisor reviews for **** and sends email a
 
 ## How it works
 
-- Runs every 30 minutes via GitHub Actions
-- Checks Google Places and TripAdvisor for new reviews
+- Runs every 2 hours via GitHub Actions
+- Checks Google Places and Tripadvisor Terra for new reviews
 - Sends an HTML email alert with review details
 - Highlights 1-2 star reviews with a red border for quick visibility
 
@@ -18,7 +18,7 @@ Add the following secrets to your repository (**Settings → Secrets and variabl
 | Secret | Description |
 |---|---|
 | `GOOGLE_PLACES_API_KEY` | Google Places key — needs both the legacy Places API and Places API (New) |
-| `TRIPADVISOR_API_KE` | TripAdvisor Content API key |
+| `TRIPADVISOR_API_KEY` | Tripadvisor **Terra** API key, from [tripadvisor.com/developers](https://www.tripadvisor.com/developers) |
 | `YAHOO_APP_PASSWORD` | Yahoo Mail app password |
 
 ### 2. Google Cloud Console
@@ -37,6 +37,26 @@ On first run the script records all existing reviews without sending an email. F
 ## Manual test
 
 Go to **Actions → Check Hotel Reviews → Run workflow** and enable the **"Send a test email"** toggle. This sends the latest review from each platform to confirm everything is working.
+
+## API call budget
+
+Both feeds are metered, which is why the schedule is every 2 hours (12 runs/day, ~360 calls/month per platform) rather than every 30 minutes.
+
+| | Rate | Free allowance |
+|---|---|---|
+| Google Place Details (Enterprise + Atmosphere — the `reviews` field) | $25 / 1,000 | 1,000 per month |
+| Tripadvisor Terra | shown at signup | set by your plan |
+
+Google needs active billing on the Cloud project even to use its free tier — if billing lapses, every call returns `REQUEST_DENIED`. Worth setting a daily quota cap on the Places API and a budget alert.
+
+## Tripadvisor: Terra, not the Content API
+
+The legacy Tripadvisor Content API was sunset on **31 August 2026** and now returns `403` to every key, regardless of account standing. This monitor uses its replacement, [Terra](https://docs.terra.tripadvisor.com):
+
+- `GET https://terra.tripadvisor.com/api/locations/{id}/reviews`, authenticated with an `X-API-Key` header
+- `sort_by=MOST_RECENT` gives true date ordering, which the legacy endpoint never supported
+- `title` and `text` come back as arrays of translations; the entry flagged `primary` is the original language
+- Terra's display requirements mean review alerts must show Tripadvisor's own bubble rating image, the review date, a link back to the review, and a credit line — all of which the email template does
 
 ## When a feed breaks
 

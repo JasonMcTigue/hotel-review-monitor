@@ -154,10 +154,27 @@ def get_google_reviews(place_id):
     return reviews
 
 
+def primary_translation(items):
+    """Terra returns title and text as a list of translations, one per language.
+
+    The entry flagged `primary` is the language the review was written in.
+    """
+    if not items:
+        return ""
+    primary = next((i for i in items if i.get("primary")), items[0])
+    return primary.get("value", "")
+
+
 def get_tripadvisor_reviews():
+    # Terra, not the legacy Content API: that was sunset on 31 Aug 2026 and now
+    # returns 403 to every key, which is what killed TripAdvisor alerts on
+    # 1 Sep. Terra sorts by date natively — the legacy endpoint could not — so
+    # MAX_AGE_DAYS is now a backstop rather than the only thing stopping old
+    # reviews from rotating into view and alerting.
     resp = requests.get(
-        f"https://api.content.tripadvisor.com/api/v1/location/{TRIPADVISOR_LOCATION_ID}/reviews",
-        params={"key": TRIPADVISOR_API_KEY, "language": "en"},
+        f"https://terra.tripadvisor.com/api/locations/{TRIPADVISOR_LOCATION_ID}/reviews",
+        params={"sort_by": "MOST_RECENT", "size": 5, "language": "en"},
+        headers={"X-API-Key": TRIPADVISOR_API_KEY},
         timeout=10,
     )
     data = resp.json()
@@ -169,10 +186,14 @@ def get_tripadvisor_reviews():
             "id": str(r.get("id", "")),
             "author": r.get("user", {}).get("username", "Anonymous"),
             "rating": str(r.get("rating", "?")),
-            "title": r.get("title", ""),
-            "text": r.get("text", "")[:1000],
-            "date": r.get("published_date", "")[:10],
-            "_published": r.get("published_date", ""),
+            "title": primary_translation(r.get("title")),
+            "text": primary_translation(r.get("text"))[:1000],
+            "date": (r.get("publish_ts") or "")[:10],
+            "_published": r.get("publish_ts", ""),
+            # Terra's display requirements: show Tripadvisor's own bubble
+            # rating image and link back to the review on Tripadvisor.
+            "rating_icon": (r.get("rating_icon_url") or {}).get("url", ""),
+            "url": r.get("url", ""),
         })
     print(f"TripAdvisor API: OK — {len(reviews)} reviews")
     return reviews
@@ -207,19 +228,39 @@ def send_email(new_reviews):
             except (ValueError, TypeError):
                 rating_num = 0
             border_color = "#e74c3c" if rating_num <= 2 else "#4CAF50"
+            # Tripadvisor's terms require its own bubble rating image rather
+            # than a substitute; Google reviews keep the star glyphs.
+            rating_html = (
+                f"<img src='{r['rating_icon']}' alt='{r['rating']} of 5 bubbles' "
+                f"style='height:18px;margin:6px 0;display:block;'>"
+                if r.get("rating_icon")
+                else f"<div style='color:#f5a623;font-size:18px;margin:4px 0;'>{star_rating(r['rating'])}</div>"
+            )
+            link_html = (
+                f"<a href='{r['url']}' style='color:#00aa6c;font-size:12px;'>Read on Tripadvisor</a>"
+                if r.get("url")
+                else ""
+            )
             cards.append(f"""
             <div style="background:#f9f9f9;border-left:4px solid {border_color};
                         padding:12px 16px;margin:10px 0;border-radius:4px;">
               <div style="font-weight:bold;font-size:15px;">{r['author']}</div>
-              <div style="color:#f5a623;font-size:18px;margin:4px 0;">{star_rating(r['rating'])}</div>
+              {rating_html}
               {title_html}
               <div style="color:#333;">{r['text']}</div>
-              <div style="color:#999;font-size:12px;margin-top:8px;">{r['date']}</div>
+              <div style="color:#999;font-size:12px;margin-top:8px;">{r['date']} {link_html}</div>
             </div>""")
 
+        # Terra's display requirements: review content must be credited.
+        credit = (
+            "<p style='color:#999;font-size:11px;margin:4px 0 0;'>"
+            "Reviews and bubble ratings provided by Tripadvisor.</p>"
+            if platform == "TripAdvisor"
+            else ""
+        )
         sections.append(
             f"<h3 style='color:#2c3e50;border-bottom:2px solid #eee;padding-bottom:6px;'>"
-            f"{icon} {platform}</h3>" + "".join(cards)
+            f"{icon} {platform}</h3>" + "".join(cards) + credit
         )
 
     html = f"""
