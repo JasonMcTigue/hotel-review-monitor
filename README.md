@@ -2,6 +2,8 @@
 
 Automatically monitors Google and TripAdvisor reviews for **** and sends email alerts when new reviews are posted.
 
+**Dashboard: https://jasonmctigue.github.io/hotel-review-monitor/**
+
 ## How it works
 
 - Runs every 6 hours via GitHub Actions

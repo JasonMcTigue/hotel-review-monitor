@@ -17,6 +17,7 @@ HOTEL_LNG = -9.5285384
 
 GOOGLE_API_KEY = os.environ.get("GOOGLE_PLACES_API_KEY", "")
 TRIPADVISOR_API_KEY = os.environ.get("TRIPADVISOR_API_KEY", "")
+DASHBOARD_URL = "https://jasonmctigue.github.io/hotel-review-monitor/"
 SENDER_EMAIL = "c_newport26@yahoo.com"
 SENDER_APP_PASSWORD = os.environ.get("YAHOO_APP_PASSWORD", "")
 RECIPIENT_EMAILS = ["jasonmctigue@live.ie", "creidy@thegrace.ie"]
@@ -321,7 +322,7 @@ def send_email(new_reviews, negative=False):
       <p style="color:#666;">{intro}</p>
       {"".join(sections)}
       <hr style="border:none;border-top:1px solid #eee;margin-top:24px;">
-      <p style="color:#aaa;font-size:11px;">Monitored by hotel-review-monitor</p>
+      <p style="color:#aaa;font-size:11px;"><a href="{DASHBOARD_URL}" style="color:#1f4d3d;">View the review dashboard</a> · Monitored by hotel-review-monitor</p>
     </body></html>""")
 
 
@@ -447,7 +448,7 @@ def weekly_digest():
       {body}
       <p style='color:#999;font-size:11px;'>Reviews and bubble ratings provided by Tripadvisor.</p>
       <hr style="border:none;border-top:1px solid #eee;margin-top:24px;">
-      <p style="color:#aaa;font-size:11px;">Monitored by hotel-review-monitor</p>
+      <p style="color:#aaa;font-size:11px;"><a href="{DASHBOARD_URL}" style="color:#1f4d3d;">View the review dashboard</a> · Monitored by hotel-review-monitor</p>
     </body></html>""")
 
 
