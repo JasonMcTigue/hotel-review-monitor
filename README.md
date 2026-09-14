@@ -108,6 +108,7 @@ What this does and doesn't buy you:
 - **This repo is public, so `reviews.json` already publishes every review in the clear.** The gate protects the rendered dashboard, not the underlying data — making the repo private is what would close that gap
 - To rotate: update the secret and re-run the workflow. GitHub never reads a secret back, so keep a copy somewhere you can recover it
 - Encryption uses a fresh salt and IV each build, so the page is only rewritten when what it contains actually changes (data, markup, stylesheet, logo or gate — tracked in `docs/.content-hash`) — otherwise every run would commit a new file
+- A rotation changes none of that, so the build also checks whether the published page still opens with the current passphrase and re-encrypts when it doesn't. Without that, rotating would look like it worked while leaving the page sealed under the old key
 
 ## Weekly digest and heartbeat
 

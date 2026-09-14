@@ -16,6 +16,7 @@ import hashlib
 import html
 import json
 import os
+import re
 import sys
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
@@ -503,6 +504,36 @@ btn.addEventListener("click", () => {{
 PBKDF2_ITERATIONS = 600_000
 
 
+def published_opens_with(password):
+    """Does the page already sitting in docs/ decrypt with this passphrase?
+
+    Rotating the passphrase changes no content, so the fingerprint still
+    matches and the no-op guard would leave the old ciphertext published
+    under the old key — the rotation would appear to succeed and change
+    nothing. Asking whether the current passphrase still opens the published
+    file catches that, and unlike a stored verifier it puts nothing
+    passphrase-derived into a world-readable page.
+
+    False on anything unexpected — a missing, unencrypted or malformed page
+    all mean "cannot confirm", and republishing is the safe answer.
+    """
+    from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+
+    try:
+        with open(OUTPUT_FILE) as f:
+            match = re.search(r"const PAYLOAD = (\{.*?\});", f.read(), re.S)
+        if not match:
+            return False
+        payload = json.loads(match.group(1))
+        b = base64.b64decode
+        key = hashlib.pbkdf2_hmac("sha256", password.encode(),
+                                  b(payload["salt"]), payload["iter"], 32)
+        AESGCM(key).decrypt(b(payload["iv"]), b(payload["ct"]), None)
+        return True
+    except Exception:
+        return False
+
+
 def encrypt_page(plaintext, password):
     """AES-GCM the rendered page under a PBKDF2-derived key."""
     from cryptography.hazmat.primitives.ciphers.aead import AESGCM
@@ -713,12 +744,28 @@ def main():
     data = summarise(history)
     content = render_content(data)
 
+    encrypting = "--encrypt" in sys.argv
+    password = ""
+    if encrypting:
+        password = os.environ.get("DASHBOARD_PASSWORD", "")
+        # Refuse rather than quietly publish the dashboard in the clear: the
+        # published file is world-readable, so a missing secret would expose
+        # everything this flag exists to hide.
+        if not password:
+            sys.exit("DASHBOARD_PASSWORD is not set — refusing to publish unencrypted.")
+
     digest = content_hash(data)
     if os.path.exists(OUTPUT_FILE) and os.path.exists(HASH_FILE) and "--artifact" not in sys.argv:
         with open(HASH_FILE) as f:
-            if f.read().strip() == digest:
-                print("Dashboard data unchanged — leaving the published page as is.")
-                return
+            unchanged = f.read().strip() == digest
+        # A rotated passphrase leaves the fingerprint untouched, so check the
+        # key as well as the content before deciding there is nothing to do.
+        if unchanged and encrypting and not published_opens_with(password):
+            print("Passphrase changed — re-encrypting the published page.")
+            unchanged = False
+        if unchanged:
+            print("Dashboard data unchanged — leaving the published page as is.")
+            return
 
     if "--artifact" in sys.argv:
         path = sys.argv[sys.argv.index("--artifact") + 1]
@@ -729,13 +776,7 @@ def main():
 
     page = full_page(content)
 
-    if "--encrypt" in sys.argv:
-        password = os.environ.get("DASHBOARD_PASSWORD", "")
-        # Refuse rather than quietly publish the dashboard in the clear: the
-        # published file is world-readable, so a missing secret would expose
-        # everything this flag exists to hide.
-        if not password:
-            sys.exit("DASHBOARD_PASSWORD is not set — refusing to publish unencrypted.")
+    if encrypting:
         page = GATE.replace("__PAYLOAD__", json.dumps(encrypt_page(page, password)))
 
     os.makedirs(os.path.dirname(OUTPUT_FILE), exist_ok=True)
