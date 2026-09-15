@@ -3,6 +3,34 @@
   "google_place_id": "ChIJRSMLtd5lWUgR1ZANfvIm4Dg",
   "reviews": [
     {
+      "platform": "Google",
+      "id": "google:Eymard Brennan:1789468554",
+      "author": "Eymard Brennan",
+      "rating": 5,
+      "title": "",
+      "text": "Have no words to describe our stay in the Grace is was just amazing,one of the best if not the best hotel we have ever stayed in.A warm welcome staff could not be more helpful,food was fantastic  and the breakfast just something else.5 stars all the way highly recommended you won't be disappointed.",
+      "published": "2026-09-15T10:35:54+00:00",
+      "date": "2026-09-15",
+      "url": "https://www.google.com/maps/contrib/111856364463061115527/reviews",
+      "rating_icon": "",
+      "owner_response": false,
+      "first_seen": "2026-09-15T10:42:15.500786+00:00"
+    },
+    {
+      "platform": "TripAdvisor",
+      "id": "1077488237",
+      "author": "tinacB3849OI",
+      "rating": 5,
+      "title": "5 Stars",
+      "text": "Back from a fabulous evening in Kelly's Bar food, atmosphere   and service excellent. Staff so friendly  & efficient  particularly Carlos and Lexi just brilliant.   The hotel  decor, furnishings  and attention to detail -  Superb.  Well done  everyone",
+      "published": "2026-09-12T17:49:26.218Z",
+      "date": "2026-09-12",
+      "url": "https://www.tripadvisor.com/ShowUserReviews-g186627-d34251217-r1077488237-The_Grace_Westport_Estate-Westport_County_Mayo_Western_Ireland.html",
+      "rating_icon": "https://www.tripadvisor.com/img/cdsi/img2/ratings/traveler/5.0-70260-4.png",
+      "owner_response": false,
+      "first_seen": "2026-09-15T10:42:15.760998+00:00"
+    },
+    {
       "platform": "TripAdvisor",
       "id": "1077212590",
       "author": "B1638CNlauram",
