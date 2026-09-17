@@ -25,6 +25,13 @@ HOTEL_NAME = "The Grace Westport Estate"
 HISTORY_FILE = "reviews.json"
 OUTPUT_FILE = os.path.join("docs", "index.html")
 MONTHS_SHOWN = 6
+
+# The platforms whose own headline score the dashboard will show, in display
+# order, with the scale each one publishes on. Booking.com is listed because it
+# rates out of 10 rather than 5 — nothing populates it today (its score is
+# behind a partner agreement), but a manually entered figure or a future feed
+# drops straight in without touching the rendering.
+SCORE_SCALES = {"Google": 5, "TripAdvisor": 5, "Booking.com": 10}
 LOGO_FILE = os.path.join("assets", "logo-mask.png")
 
 
@@ -92,8 +99,26 @@ def summarise(history):
 
     distribution = Counter(rating_int(r["rating"]) for r in reviews)
 
+    # Each platform's own published score, across its entire review history.
+    # Deliberately kept apart from `average` below: the feeds return only a
+    # handful of reviews each, so averaging what we hold describes the sample,
+    # not the property.
+    scores = []
+    for platform, scale in SCORE_SCALES.items():
+        s = history.get("scores", {}).get(platform) or {}
+        if not s.get("rating"):
+            continue
+        scores.append({
+            "platform": platform,
+            "rating": s["rating"],
+            "count": s.get("count") or 0,
+            "scale": scale,
+            "fetched": parse_day(s["fetched"]) if s.get("fetched") else "",
+        })
+
     return {
         "hotel": HOTEL_NAME,
+        "scores": scores,
         "generated": now.strftime("%d %b %Y, %H:%M UTC"),
         "tracking_since": parse_day(reviews[-1]["published"]) if reviews else "",
         "average": round(sum(rated) / len(rated), 1) if rated else 0,
@@ -251,6 +276,15 @@ STYLE = """
                  font-variant-numeric: tabular-nums; }
   .tile .value.hero { font-size: 44px; }
   .tile .note { font-size: 12px; color: var(--ink-2); }
+  /* Google and Tripadvisor rate out of 5, Booking.com out of 10, so the scale
+     is shown rather than assumed — 9.1 and 4.6 side by side are meaningless
+     without it. */
+  .tile .value .scale { font-size: 16px; font-weight: 400; color: var(--muted);
+                        margin-left: 2px; }
+  .scores { margin-bottom: 18px; }
+  .scores .tiles { margin-top: 0; }
+  /* Nested inside a --surface card, so these sit on --page to stay distinct. */
+  .scores .tile { background: var(--page); }
 
   /* cards */
   .grid2 { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
@@ -335,9 +369,33 @@ def render_content(d):
     since = d["days_since"]
     since_text = "today" if since == 0 else ("1 day ago" if since == 1 else f"{since} days ago")
 
+    # One tile per platform, showing the score that platform publishes across
+    # every review it holds. Rendered only when a score has been fetched, so a
+    # feed that has never answered leaves no empty box behind.
+    score_html = "".join(
+        f'<div class="tile"><div class="label">{esc(s["platform"])}</div>'
+        f'<div class="value hero">{s["rating"]:.1f}'
+        f'<span class="scale">/{s["scale"]}</span></div>'
+        f'<div class="note">across {s["count"]:,} reviews'
+        + (f' · as of {esc(s["fetched"])}' if s["fetched"] else "")
+        + "</div></div>"
+        for s in d["scores"]
+    )
+    scores_section = (
+        '<section class="card scores">'
+        "<h2>Guest scores</h2>"
+        '<p class="sub">Each platform\'s own rating, across its full review history</p>'
+        f'<div class="tiles">{score_html}</div>'
+        "</section>"
+        if score_html else ""
+    )
+
     tiles = [
-        ("Average rating", f'{d["average"]:.1f}' if d["average"] else "—", "hero",
-         f'across {d["total"]} reviews'),
+        # Explicitly "tracked", to keep it from being read as the property's
+        # score: Google returns 5 reviews and Tripadvisor 3, so this is an
+        # average of the sample the monitor has collected, not of everything.
+        ("Tracked average", f'{d["average"]:.1f}' if d["average"] else "—", "hero",
+         f'from the {d["total"]} reviews recorded here'),
         ("Last 30 days", str(d["count_30"]), "",
          f'averaging {d["average_30"]:.1f} ★' if d["average_30"] else "no reviews yet"),
         ("Most recent", since_text if since is not None else "—", "",
@@ -377,6 +435,8 @@ def render_content(d):
     </div>
     <div class="feeds">{feeds}</div>
   </header>
+
+  {scores_section}
 
   <section class="tiles">{tile_html}</section>
 

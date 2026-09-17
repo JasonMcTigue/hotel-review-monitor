@@ -1,7 +1,8 @@
 name: Maintenance
 
-# Two jobs that cost no review-API calls: a daily check that the monitor is
-# still alive, and a Monday digest built entirely from stored history.
+# A daily check that the monitor is still alive and a Monday digest, both built
+# from stored history at no API cost, plus a daily refresh of the Tripadvisor
+# score — the one job here that does spend a call.
 on:
   schedule:
     - cron: '0 8 * * *'
@@ -34,6 +35,53 @@ jobs:
           YAHOO_APP_PASSWORD: ${{ secrets.YAHOO_APP_PASSWORD }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python check_reviews.py --heartbeat
+
+  # Tripadvisor's headline score needs a call of its own, so it refreshes once
+  # a day rather than on every 6-hourly review check: ~30 calls a month against
+  # the same metered allowance instead of ~120, for a figure that moves slowly
+  # enough that a day-old reading is no worse than a 6-hour-old one. Google's
+  # score is free with the reviews call and refreshes every run instead.
+  scores:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install -r requirements.txt
+
+      # --scores touches only history["scores"]; it cannot alert and cannot
+      # alter review history, so a failure here costs a stale number and
+      # nothing else.
+      - name: Refresh the Tripadvisor score
+        env:
+          TRIPADVISOR_API_KEY: ${{ secrets.TRIPADVISOR_API_KEY }}
+        run: python check_reviews.py --scores
+
+      - name: Rebuild dashboard
+        if: ${{ !cancelled() }}
+        env:
+          DASHBOARD_PASSWORD: ${{ secrets.DASHBOARD_PASSWORD }}
+        run: python dashboard.py --encrypt
+
+      - name: Commit the refreshed score
+        if: ${{ !cancelled() }}
+        run: |
+          if [ -z "$(git status --porcelain reviews.json docs)" ]; then
+            echo "Score unchanged — nothing to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reviews.json docs
+          git commit -m "Refresh platform scores and dashboard"
+          # The checker and keepalive jobs also push to main; rebase rather
+          # than fail on a race.
+          git pull --rebase --autostash origin main
+          git push
 
   digest:
     runs-on: ubuntu-latest

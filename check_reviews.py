@@ -63,8 +63,26 @@ class ReviewFetchError(Exception):
 def load_history():
     if os.path.exists(HISTORY_FILE):
         with open(HISTORY_FILE) as f:
-            return json.load(f)
-    return {"initialized": False, "google_place_id": None, "reviews": []}
+            history = json.load(f)
+        # `scores` was added after the first histories were written.
+        history.setdefault("scores", {})
+        return history
+    return {"initialized": False, "google_place_id": None, "scores": {}, "reviews": []}
+
+
+def record_score(history, platform, score):
+    """Store a platform's own headline rating, replacing the previous figure.
+
+    This is the score the platform publishes across its whole review history,
+    which is a different thing from averaging the reviews in `reviews` — the
+    feeds only ever hand back a handful of those, so their average describes
+    the sample rather than the property.
+    """
+    if not score or not score.get("rating"):
+        return
+    history.setdefault("scores", {})[platform] = dict(
+        score, fetched=datetime.now(timezone.utc).isoformat()
+    )
 
 
 def save_history(history):
@@ -155,13 +173,21 @@ def get_google_place_id():
 
 
 def get_google_reviews(place_id):
-    # Use the legacy Place Details endpoint with reviews_sort=newest. The Places
-    # API (New) only returns ~5 reviews ranked by relevance with no newest sort,
-    # so once the hotel had enough reviews, new ones stopped making the cut and
-    # Google alerts silently died. The legacy endpoint returns the 5 *newest*.
+    """Return (the 5 newest reviews, Google's own headline score).
+
+    Use the legacy Place Details endpoint with reviews_sort=newest. The Places
+    API (New) only returns ~5 reviews ranked by relevance with no newest sort,
+    so once the hotel had enough reviews, new ones stopped making the cut and
+    Google alerts silently died. The legacy endpoint returns the 5 *newest*.
+
+    `rating` and `user_ratings_total` come along for free: they sit in the same
+    Atmosphere billing category as `reviews`, and a request is charged once at
+    the highest category it asks for — so adding them to a call that already
+    wants `reviews` costs nothing and saves a second call.
+    """
     resp = requests.get(
         "https://maps.googleapis.com/maps/api/place/details/json",
-        params={"place_id": place_id, "fields": "reviews",
+        params={"place_id": place_id, "fields": "rating,user_ratings_total,reviews",
                 "reviews_sort": "newest", "key": GOOGLE_API_KEY},
         timeout=10,
     )
@@ -175,8 +201,14 @@ def get_google_reviews(place_id):
             f"Place Details failed: HTTP {resp.status_code} {status} — "
             f"{data.get('error_message', 'no error_message returned')}"
         )
+    result = data.get("result", {})
+    score = (
+        {"rating": float(result["rating"]),
+         "count": int(result.get("user_ratings_total") or 0)}
+        if result.get("rating") else {}
+    )
     reviews = []
-    for r in data.get("result", {}).get("reviews", []):
+    for r in result.get("reviews", []):
         # Legacy reviews have no stable resource id; synthesise one from the
         # author and unix review time so dedup still works.
         t = r.get("time")
@@ -195,8 +227,9 @@ def get_google_reviews(place_id):
             "rating_icon": "",
             "owner_response": False,
         })
-    print(f"Google Details API: {status} — {len(reviews)} reviews")
-    return reviews
+    scored = f", score {score['rating']} from {score['count']}" if score else ""
+    print(f"Google Details API: {status} — {len(reviews)} reviews{scored}")
+    return reviews, score
 
 
 # ------------------------------------------------------------ tripadvisor ---
@@ -254,6 +287,38 @@ def get_tripadvisor_reviews(size=25):
         })
     print(f"TripAdvisor API: OK — {len(reviews)} reviews")
     return reviews
+
+
+def get_tripadvisor_score():
+    """The property's own headline rating on Tripadvisor, across every review.
+
+    A separate call from the reviews one, and metered the same way, which is
+    why it runs daily from maintenance.yml rather than every 6 hours: the
+    figure barely moves, so a day-old score is no worse than a 6-hour-old one
+    and it costs ~30 calls a month instead of ~120.
+    """
+    resp = requests.get(
+        "https://terra.tripadvisor.com/api/locations",
+        params={"id": [TRIPADVISOR_LOCATION_ID]},
+        headers={"X-API-Key": TRIPADVISOR_API_KEY},
+        timeout=10,
+    )
+    data = resp.json()
+    if resp.status_code != 200:
+        raise ReviewFetchError(f"HTTP {resp.status_code} — {data}")
+    locations = data.get("data") or []
+    if not locations:
+        raise ReviewFetchError(f"no location returned for id {TRIPADVISOR_LOCATION_ID}")
+    overall = ((locations[0].get("traveler_ratings") or {}).get("overall")) or {}
+    if not overall.get("rating"):
+        # Loud rather than silent: a score that quietly becomes None would
+        # leave a stale figure on the dashboard with nothing to say why.
+        raise ReviewFetchError(
+            f"no overall rating in response — got keys {sorted(locations[0])}")
+    print(f"TripAdvisor score: {overall['rating']} from {overall.get('count')} reviews")
+    return {"rating": float(overall["rating"]),
+            "count": int(overall.get("count") or 0),
+            "icon_url": overall.get("icon_url") or ""}
 
 
 # ------------------------------------------------------------------ email ---
@@ -414,7 +479,10 @@ def main():
     def google():
         place_id = history.get("google_place_id") or get_google_place_id()
         history["google_place_id"] = place_id
-        return get_google_reviews(place_id)
+        reviews, score = get_google_reviews(place_id)
+        # Free with the call above, so it refreshes on every run.
+        record_score(history, "Google", score)
+        return reviews
 
     collect(history, google, "Google", new_reviews, errors)
     collect(history, get_tripadvisor_reviews, "TripAdvisor", new_reviews, errors)
@@ -588,7 +656,7 @@ if __name__ == "__main__":
         test_reviews = {"Google": [], "TripAdvisor": []}
         errors = []
         try:
-            reviews = get_google_reviews(get_google_place_id())
+            reviews, _ = get_google_reviews(get_google_place_id())
             test_reviews["Google"] = reviews[:1]
         except (ReviewFetchError, requests.RequestException) as e:
             errors.append(f"Google: {e}")
@@ -619,10 +687,10 @@ if __name__ == "__main__":
         print(f"\n=== GOOGLE (place {history.get('google_place_id')}) ===")
         try:
             place_id = history.get("google_place_id") or get_google_place_id()
-            g = get_google_reviews(place_id)
+            g, score = get_google_reviews(place_id)
             for r in sorted(g, key=lambda r: r["published"], reverse=True):
                 print(f"  {r['published']}  {r['rating']}★  {r['author']}  | {r['text'][:60]!r}")
-            print(f"  ({len(g)} Google reviews returned)")
+            print(f"  ({len(g)} Google reviews returned, score {score or 'none'})")
         except (ReviewFetchError, requests.RequestException) as e:
             errors.append(f"Google: {e}")
 
@@ -633,10 +701,29 @@ if __name__ == "__main__":
         except (ReviewFetchError, requests.RequestException) as e:
             errors.append(f"TripAdvisor: {e}")
 
+        print("\n=== TRIPADVISOR SCORE ===")
+        try:
+            print(f"  {get_tripadvisor_score()}")
+        except (ReviewFetchError, requests.RequestException) as e:
+            errors.append(f"TripAdvisor score: {e}")
+
         for e in errors:
             print(f"ERROR: {e}")
         if errors:
             sys.exit(1)
+
+    elif "--scores" in sys.argv:
+        # Refreshes only the platform-published scores, never the reviews, so
+        # it cannot alert and cannot alter review history. Google's score is
+        # already free with the 6-hourly reviews call; this is here for the
+        # Tripadvisor one, which costs a call of its own.
+        history = load_history()
+        try:
+            record_score(history, "TripAdvisor", get_tripadvisor_score())
+        except (ReviewFetchError, requests.RequestException) as e:
+            print(f"ERROR: TripAdvisor score: {e}")
+            sys.exit(1)
+        save_history(history)
 
     elif "--digest" in sys.argv:
         weekly_digest()

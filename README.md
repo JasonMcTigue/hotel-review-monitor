@@ -11,12 +11,13 @@ Automatically monitors Google and TripAdvisor reviews for **** and sends email a
 - Emails an HTML alert with review details; 1–2 star reviews get their own escalated email
 - Reviews that surface long after they were written get a third, clearly labelled "backdated" email, so a slow moderation queue can never hide one
 - Records every review it sees in `reviews.json` and rebuilds a dashboard from it
+- Shows each platform's own headline score on the dashboard, which is a different number from the average of the reviews it has captured — the feeds return only 5 (Google) and 3 (Tripadvisor) reviews each, so that average is a sample, not the property's rating
 - Emails a digest each Monday and shouts if the monitor itself goes quiet
 
 | Workflow | Schedule | Does |
 |---|---|---|
 | `check-reviews.yml` | every 6 hours | fetch reviews, alert, update history + dashboard |
-| `maintenance.yml` | daily 08:00 UTC | heartbeat check; weekly digest on Mondays |
+| `maintenance.yml` | daily 08:00 UTC | heartbeat check; refresh the Tripadvisor score; weekly digest on Mondays |
 | `keepalive.yml` | 1st & 21st | keep the schedules from being disabled for inactivity |
 
 ## Setup
@@ -55,10 +56,13 @@ Both feeds are metered, which is why the schedule is every 6 hours (4 runs/day, 
 
 Note that Tripadvisor's `publish_ts` is the guest's submission time, not when the review went live — observed lag between the two is consistently around 3 days, against roughly zero on Google. So a Tripadvisor alert arriving days after the date shown on the review is the platform's moderation queue, not a missed run.
 
-| | Rate | Free allowance |
-|---|---|---|
-| Google Place Details (Enterprise + Atmosphere — the `reviews` field) | $25 / 1,000 | 1,000 per month |
-| Tripadvisor Terra | shown at signup | set by your plan |
+| | Calls/month | Rate | Free allowance |
+|---|---|---|---|
+| Google Place Details (Enterprise + Atmosphere — `reviews`, `rating`, `user_ratings_total`) | ~120 | $25 / 1,000 | 1,000 per month |
+| Tripadvisor Terra — reviews, every 6 hours | ~120 | shown at signup | set by your plan |
+| Tripadvisor Terra — score, once a day | ~30 | shown at signup | set by your plan |
+
+Google's `rating` and `user_ratings_total` are free additions: they sit in the same Atmosphere billing category as `reviews`, and a request is charged once at the highest category it asks for. Tripadvisor's score needs a separate `GET /locations` call, which is why it runs daily from `maintenance.yml` rather than on every review check.
 
 Google needs active billing on the Cloud project even to use its free tier — if billing lapses, every call returns `REQUEST_DENIED`. Worth setting a daily quota cap on the Places API and a budget alert.
 
@@ -67,6 +71,7 @@ Google needs active billing on the Cloud project even to use its free tier — i
 The legacy Tripadvisor Content API was sunset on **31 August 2026** and now returns `403` to every key, regardless of account standing. This monitor uses its replacement, [Terra](https://docs.terra.tripadvisor.com):
 
 - `GET https://terra.tripadvisor.com/api/locations/{id}/reviews`, authenticated with an `X-API-Key` header
+- `GET https://terra.tripadvisor.com/api/locations?id={id}` for the headline score, read from `traveler_ratings.overall`
 - `sort_by=MOST_RECENT` gives true date ordering, which the legacy endpoint never supported
 - `title` and `text` come back as arrays of translations; the entry flagged `primary` is the original language
 - Terra's display requirements mean review alerts must show Tripadvisor's own bubble rating image, the review date, a link back to the review, and a credit line — all of which the email template does
