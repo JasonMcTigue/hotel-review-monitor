@@ -9,6 +9,7 @@ Automatically monitors Google and TripAdvisor reviews for **** and sends email a
 - Runs every 6 hours via GitHub Actions
 - Checks Google Places and Tripadvisor Terra for new reviews
 - Emails an HTML alert with review details; 1–2 star reviews get their own escalated email
+- Reviews that surface long after they were written get a third, clearly labelled "backdated" email, so a slow moderation queue can never hide one
 - Records every review it sees in `reviews.json` and rebuilds a dashboard from it
 - Emails a digest each Monday and shouts if the monitor itself goes quiet
 
@@ -50,7 +51,9 @@ Go to **Actions → Check Hotel Reviews → Run workflow** and enable the **"Sen
 
 ## API call budget
 
-Both feeds are metered, which is why the schedule is every 6 hours (4 runs/day, ~120 calls per platform per month) rather than every 30 minutes. Reviews are only alerted on within `MAX_AGE_DAYS` (7) of publication, so a 6-hour gap between runs has no chance of missing one.
+Both feeds are metered, which is why the schedule is every 6 hours (4 runs/day, ~120 calls per platform per month) rather than every 30 minutes. Nothing is missed by the gap: a review is alerted on the first run that sees it, and `MAX_AGE_DAYS` (7) only decides whether it is announced as new or as backdated.
+
+Note that Tripadvisor's `publish_ts` is the guest's submission time, not when the review went live — observed lag between the two is consistently around 3 days, against roughly zero on Google. So a Tripadvisor alert arriving days after the date shown on the review is the platform's moderation queue, not a missed run.
 
 | | Rate | Free allowance |
 |---|---|---|

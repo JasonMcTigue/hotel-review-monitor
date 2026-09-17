@@ -29,12 +29,18 @@ RECIPIENT_EMAILS = ["jasonmctigue@live.ie", "creidy@thegrace.ie"]
 # the history the dashboard and digest are built on.
 HISTORY_FILE = "reviews.json"
 
-# A review only counts as "new" if it was published within this window. Reviews
-# older than this are pre-existing ones rotating into the API's relevance-ranked
-# window (the APIs return only a handful of reviews), not genuinely new reviews —
-# alerting on them would be a false alarm. Kept tight so only genuinely recent
-# reviews alert, while still leaving a few days' slack for a review delayed by
-# moderation to appear before the window closes.
+# How recently a review must have been published to be treated as news rather
+# than as history. This sorts alerts into the right email; it never decides
+# whether one is sent. Anything the monitor has not recorded before is always
+# reported, because the check that stops a review being emailed twice is its
+# ID being present in the history — not its age.
+#
+# Reviews older than this are usually pre-existing ones rotating into the API's
+# window (the feeds return only a handful each), so announcing them as new
+# would be a false alarm. But they can also be genuinely new to us and merely
+# slow to appear: Tripadvisor's publish_ts is the guest's submission time and a
+# disputed review can sit in moderation for weeks. Those used to be recorded
+# and then silently never alerted, so both cases now get their own email.
 MAX_AGE_DAYS = 7
 
 # A 1-2 star review is escalated into its own email rather than being buried in
@@ -103,6 +109,21 @@ def is_recent(ts, days=MAX_AGE_DAYS):
     if t is None:
         return True
     return datetime.now(timezone.utc) - t <= timedelta(days=days)
+
+
+def surfaced_after(r):
+    """Whole days between a review being published and the monitor seeing it.
+
+    Tripadvisor holds reviews for moderation before they go live and its
+    `publish_ts` is the guest's submission time, so a couple of days' gap is
+    routine there and none at all is normal on Google. A gap far wider than
+    that is the interesting case: it means the review was invisible to the
+    feeds until long after it was written.
+    """
+    published, first_seen = parse_ts(r.get("published", "")), parse_ts(r.get("first_seen", ""))
+    if published is None or first_seen is None:
+        return 0
+    return max(0, (first_seen - published).days)
 
 
 def rating_int(value):
@@ -261,6 +282,19 @@ def review_card(r):
         f"<a href='{r['url']}' style='color:#00aa6c;font-size:12px;'>Read on {r['platform']}</a>"
         if r.get("url") else ""
     )
+    # Only worth saying when the gap is wide enough to be surprising — past the
+    # point where the review would once have been dropped without an email —
+    # otherwise it would annotate every Tripadvisor review with its routine
+    # couple of days in moderation. Worded without reference to "today",
+    # because the weekly digest renders these same cards days after the fact.
+    gap = surfaced_after(r)
+    delay_html = (
+        f"<div style='color:#8a6d3b;background:#fcf8e3;font-size:12px;"
+        f"padding:6px 8px;margin-top:8px;border-radius:3px;'>"
+        f"Written {r['date']}, but {r['platform']} only made it visible "
+        f"{gap} days later.</div>"
+        if gap > MAX_AGE_DAYS else ""
+    )
     return f"""
             <div style="background:#f9f9f9;border-left:4px solid {border_color};
                         padding:12px 16px;margin:10px 0;border-radius:4px;">
@@ -269,6 +303,7 @@ def review_card(r):
               {title_html}
               <div style="color:#333;">{r['text']}</div>
               <div style="color:#999;font-size:12px;margin-top:8px;">{r['date']} {link_html}</div>
+              {delay_html}
             </div>"""
 
 
@@ -286,13 +321,26 @@ def send_html(subject, html):
     print(f"Email sent: {subject}")
 
 
-def send_email(new_reviews, negative=False):
+def send_email(new_reviews, negative=False, backdated=False):
     total = sum(len(v) for v in new_reviews.values())
     if negative:
         subject = f"⚠️ Negative review — {HOTEL_NAME} ({total})"
         heading = "Negative Review Alert"
         intro = ("A review of <strong>2 stars or fewer</strong> was posted for "
                  f"<strong>{HOTEL_NAME}</strong>. This one is worth a reply:")
+    elif backdated:
+        # Deliberately flat wording. These are reviews the monitor has genuinely
+        # never reported, but they were written a while ago — so they should be
+        # easy to skim past without reading like something needing attention
+        # today.
+        subject = f"Backdated {'review' if total == 1 else 'reviews'} — {HOTEL_NAME} ({total})"
+        heading = "Backdated Reviews"
+        intro = (f"{'A review' if total == 1 else 'Reviews'} for "
+                 f"<strong>{HOTEL_NAME}</strong> that "
+                 f"{'has' if total == 1 else 'have'} not been reported before, "
+                 f"but {'was' if total == 1 else 'were'} published more than "
+                 f"{MAX_AGE_DAYS} days ago. Usually this means a long spell in "
+                 "moderation, or a feed serving older reviews:")
     else:
         subject = f"New Review — {HOTEL_NAME} ({total} new)"
         heading = "New Review Alert"
@@ -330,7 +378,16 @@ def send_email(new_reviews, negative=False):
 
 
 def collect(history, fetch, platform, new_reviews, errors):
-    """Fetch one platform, record anything unseen, and queue genuinely new reviews."""
+    """Fetch one platform, record anything unseen, and queue it for alerting.
+
+    The `(platform, id)` check below is the only thing that decides whether a
+    review can be emailed, and it is derived from the whole stored history — so
+    a review that has already been recorded never alerts again, however many
+    times the feeds keep handing it back. Everything unseen is queued
+    unconditionally; `main` decides which email it belongs in. Age is not
+    consulted here, because a review's age must never determine whether it is
+    reported, only how.
+    """
     seen = {(r["platform"], r["id"]) for r in history["reviews"]}
     now = datetime.now(timezone.utc).isoformat()
     try:
@@ -340,7 +397,7 @@ def collect(history, fetch, platform, new_reviews, errors):
             r["first_seen"] = now
             history["reviews"].append(r)
             seen.add((r["platform"], r["id"]))
-            if history["initialized"] and is_recent(r["published"]):
+            if history["initialized"]:
                 new_reviews[platform].append(r)
     except (ReviewFetchError, requests.RequestException) as e:
         errors.append(f"{platform}: {e}")
@@ -373,16 +430,39 @@ def main():
             print(f"Baseline recorded: {len(history['reviews'])} existing reviews. "
                   "Will alert on new reviews from now on.")
     else:
-        # Split negatives into their own email so a 1-2 star review is never
-        # buried in a batch of praise.
-        negatives = {p: [r for r in rs if rating_int(r["rating"]) <= NEGATIVE_RATING]
-                     for p, rs in new_reviews.items()}
-        positives = {p: [r for r in rs if rating_int(r["rating"]) > NEGATIVE_RATING]
-                     for p, rs in new_reviews.items()}
+        # Three routes, so that age only ever changes which email a review
+        # arrives in — never whether it arrives at all.
+        #
+        # Negatives are escalated whatever their age: a 1-2 star review that
+        # spent three weeks in moderation is the single most worth knowing
+        # about, so it must not be filed away as old news. Praise is split by
+        # age instead: recent reviews are the normal alert, while anything
+        # published longer ago than MAX_AGE_DAYS gets its own clearly labelled
+        # email. That way a feed serving stale content, or a history rebuilt
+        # from scratch, reads as what it is rather than as breaking news.
+        def bucket(pred):
+            return {p: [r for r in rs if pred(r)] for p, rs in new_reviews.items()}
+
+        def negative(r):
+            return rating_int(r["rating"]) <= NEGATIVE_RATING
+
+        negatives = bucket(negative)
+        positives = bucket(lambda r: not negative(r) and is_recent(r["published"]))
+        backdated = bucket(lambda r: not negative(r) and not is_recent(r["published"]))
+
         if any(negatives.values()):
             send_email(negatives, negative=True)
         if any(positives.values()):
             send_email(positives)
+        if any(backdated.values()):
+            # Logged as well as emailed: this is the path that used to drop a
+            # review on the floor without a word, so it should be visible in
+            # the run output even if the email fails to send.
+            for p, rs in backdated.items():
+                for r in rs:
+                    print(f"Backdated {p} review: published {r['date']}, "
+                          f"first seen today ({surfaced_after(r)} days)")
+            send_email(backdated, backdated=True)
         if not any(new_reviews.values()) and not errors:
             print("No new reviews found.")
 
