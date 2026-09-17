@@ -13,6 +13,10 @@ on:
         description: 'Send a test email'
         type: boolean
         default: false
+      test_recipient:
+        description: 'Send the test to this address only (blank = all recipients)'
+        type: string
+        default: ''
       debug:
         description: 'Dump what the APIs return (no email, read-only)'
         type: boolean
@@ -39,6 +43,7 @@ jobs:
           GOOGLE_PLACES_API_KEY: ${{ secrets.GOOGLE_PLACES_API_KEY }}
           YAHOO_APP_PASSWORD: ${{ secrets.YAHOO_APP_PASSWORD }}
           TRIPADVISOR_API_KEY: ${{ secrets.TRIPADVISOR_API_KEY }}
+          TEST_RECIPIENT: ${{ inputs.test_recipient }}
         run: |
           if [ "${{ inputs.test_email }}" = "true" ]; then
             python check_reviews.py --test

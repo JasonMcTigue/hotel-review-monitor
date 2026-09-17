@@ -372,21 +372,27 @@ def review_card(r):
             </div>"""
 
 
-def send_html(subject, html):
+def send_html(subject, html, recipients=None):
+    """Send to RECIPIENT_EMAILS, or to `recipients` if given.
+
+    The override exists for test runs: verifying the mail path should not put
+    an alert about an already-seen review into the hotel's inbox.
+    """
+    to = recipients or RECIPIENT_EMAILS
     msg = MIMEMultipart("alternative")
     msg["Subject"] = subject
     msg["From"] = f"Hotel Review Monitor <{SENDER_EMAIL}>"
-    msg["To"] = ", ".join(RECIPIENT_EMAILS)
+    msg["To"] = ", ".join(to)
     msg.attach(MIMEText(html, "html"))
 
     with smtplib.SMTP_SSL("smtp.mail.yahoo.com", 465) as server:
         server.login(SENDER_EMAIL, SENDER_APP_PASSWORD)
-        server.sendmail(SENDER_EMAIL, RECIPIENT_EMAILS, msg.as_string())
+        server.sendmail(SENDER_EMAIL, to, msg.as_string())
 
-    print(f"Email sent: {subject}")
+    print(f"Email sent to {', '.join(to)}: {subject}")
 
 
-def send_email(new_reviews, negative=False, backdated=False):
+def send_email(new_reviews, negative=False, backdated=False, recipients=None):
     total = sum(len(v) for v in new_reviews.values())
     if negative:
         subject = f"⚠️ Negative review — {HOTEL_NAME} ({total})"
@@ -436,7 +442,7 @@ def send_email(new_reviews, negative=False, backdated=False):
       {"".join(sections)}
       <hr style="border:none;border-top:1px solid #eee;margin-top:24px;">
       <p style="color:#aaa;font-size:11px;"><a href="{DASHBOARD_URL}" style="color:#1f4d3d;">View the review dashboard</a> · Monitored by hotel-review-monitor</p>
-    </body></html>""")
+    </body></html>""", recipients)
 
 
 # ------------------------------------------------------------------- main ---
@@ -670,8 +676,13 @@ if __name__ == "__main__":
             errors.append(f"TripAdvisor: {e}")
 
         if any(test_reviews.values()):
-            send_email(test_reviews)
-            print("Test email sent with real latest reviews.")
+            # TEST_RECIPIENT keeps a test run out of the hotel's inbox: the
+            # email is an ordinary "New Review" alert about reviews they have
+            # already seen, which is confusing to receive unannounced.
+            only = os.environ.get("TEST_RECIPIENT", "").strip()
+            send_email(test_reviews, recipients=[only] if only else None)
+            print("Test email sent with real latest reviews"
+                  + (f" to {only} only." if only else " to all recipients."))
         else:
             print("No reviews found to send.")
         for e in errors:
