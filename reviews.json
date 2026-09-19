@@ -3,6 +3,20 @@
   "google_place_id": "ChIJRSMLtd5lWUgR1ZANfvIm4Dg",
   "reviews": [
     {
+      "platform": "Google",
+      "id": "google:Mary Colbert:1789844385",
+      "author": "Mary Colbert",
+      "rating": 5,
+      "title": "",
+      "text": "",
+      "published": "2026-09-19T18:59:45+00:00",
+      "date": "2026-09-19",
+      "url": "https://www.google.com/maps/contrib/102761202137082171390/reviews",
+      "rating_icon": "",
+      "owner_response": false,
+      "first_seen": "2026-09-19T19:46:56.232963+00:00"
+    },
+    {
       "platform": "TripAdvisor",
       "id": "1078072911",
       "author": "danielmF2690EQ",
@@ -180,8 +194,8 @@
     },
     "Google": {
       "rating": 4.6,
-      "count": 120,
-      "fetched": "2026-09-19T15:03:22.577046+00:00"
+      "count": 121,
+      "fetched": "2026-09-19T19:46:56.398987+00:00"
     }
   }
 }
