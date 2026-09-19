@@ -3,6 +3,20 @@
   "google_place_id": "ChIJRSMLtd5lWUgR1ZANfvIm4Dg",
   "reviews": [
     {
+      "platform": "TripAdvisor",
+      "id": "1078072911",
+      "author": "danielmF2690EQ",
+      "rating": 5,
+      "title": "Best hotel around Westport",
+      "text": "The Grace Hotel is hands down the best hotel I've stayed in around Ireland. The staff are incredibly friendly and welcoming from the moment you arrive.\n\nThe housekeeping team are probably the best I've encountered at any hotel — genuinely attentive. They even come round in the evening to turn down the bed and leave a pillow spray to help you sleep. Little touches like that make a real difference.\n\nThe breakfast buffet is also up there as the best I've had anywhere. I didn't manage to get into the Black Sheep restaurant as it was fully booked, so I'd definitely recommend booking that in advance if you're visiting. That said, the food in Kelly's Bar was excellent and a bit easier to grab a table.\n\nThe location is great too — a short walk into Westport, but far enough that you can skip driving in and dealing with the traffic.\n\nAll in all, a fantastic stay and I'd highly recommend it.",
+      "published": "2026-09-16T19:12:07.864Z",
+      "date": "2026-09-16",
+      "url": "https://www.tripadvisor.com/ShowUserReviews-g186627-d34251217-r1078072911-The_Grace_Westport_Estate-Westport_County_Mayo_Western_Ireland.html",
+      "rating_icon": "https://www.tripadvisor.com/img/cdsi/img2/ratings/traveler/5.0-70260-4.png",
+      "owner_response": false,
+      "first_seen": "2026-09-19T09:58:17.198807+00:00"
+    },
+    {
       "platform": "Google",
       "id": "google:Eymard Brennan:1789468554",
       "author": "Eymard Brennan",
@@ -167,7 +181,7 @@
     "Google": {
       "rating": 4.6,
       "count": 120,
-      "fetched": "2026-09-19T02:18:50.636005+00:00"
+      "fetched": "2026-09-19T09:58:17.198707+00:00"
     }
   }
 }
