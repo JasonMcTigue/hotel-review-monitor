@@ -4,6 +4,20 @@
   "reviews": [
     {
       "platform": "Google",
+      "id": "google:james quinlivan:1789926622",
+      "author": "james quinlivan",
+      "rating": 5,
+      "title": "",
+      "text": "",
+      "published": "2026-09-20T17:50:22+00:00",
+      "date": "2026-09-20",
+      "url": "https://www.google.com/maps/contrib/112209401179385410008/reviews",
+      "rating_icon": "",
+      "owner_response": false,
+      "first_seen": "2026-09-20T19:59:28.817562+00:00"
+    },
+    {
+      "platform": "Google",
       "id": "google:Karen Burke:1789855110",
       "author": "Karen Burke",
       "rating": 5,
@@ -236,8 +250,8 @@
     },
     "Google": {
       "rating": 4.6,
-      "count": 122,
-      "fetched": "2026-09-20T15:06:55.840688+00:00"
+      "count": 123,
+      "fetched": "2026-09-20T19:59:29.066033+00:00"
     }
   }
 }
