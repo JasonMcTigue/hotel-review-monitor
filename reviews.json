@@ -32,6 +32,34 @@
     },
     {
       "platform": "TripAdvisor",
+      "id": "1078152851",
+      "author": "O7626AQmadeleinem",
+      "rating": 5,
+      "title": "A very enjoyable wedding anniversary stay",
+      "text": "Enjoyed three nights in a very comfortable room which was spotless as were the communal areas. Dairy and gluten free breakfasts not a problem. Looking forward to returning when the grounds of Westport House are fully open again. Would highly recommended The Grace. Madeleine",
+      "published": "2026-09-17T11:40:18.481Z",
+      "date": "2026-09-17",
+      "url": "https://www.tripadvisor.com/ShowUserReviews-g186627-d34251217-r1078152851-The_Grace_Westport_Estate-Westport_County_Mayo_Western_Ireland.html",
+      "rating_icon": "https://www.tripadvisor.com/img/cdsi/img2/ratings/traveler/5.0-70260-4.png",
+      "owner_response": false,
+      "first_seen": "2026-09-20T10:18:42.178838+00:00"
+    },
+    {
+      "platform": "TripAdvisor",
+      "id": "1078131459",
+      "author": "pierreaZ5182PI",
+      "rating": 2,
+      "title": "Not what we expected...",
+      "text": "We had heard about the recent opening of The Grace and booked 2 nights during our September road trip across Ireland. From the dreamy imagery and enticing descriptions on the website, I was imagining a luxury boutique accommodation set in an idyllic oasis of nature.\n\nReality was unfortunately very different and it is beyond me how The Grace is listed as member of the exclusive Small Luxury Hotel collection.\n\nFrom the exterior, The Grace has the charm of an airport hotel, a large building entirely surrounded by a parking lot. Once inside, the experience is definitely more refined and elegant, however it's very dark, as there is very little natural sunlight.\n\nWe had booked one of the Clew Bay suites and the room was large, well equipped and tastefully decorated. However, when you open the curtains, the large windows offer no other view than… the parking lot!  But the worst part was to come: the sound proofing was terrible and we had the constant noise of footsteps, voices and slamming do",
+      "published": "2026-09-17T08:53:16.586Z",
+      "date": "2026-09-17",
+      "url": "https://www.tripadvisor.com/ShowUserReviews-g186627-d34251217-r1078131459-The_Grace_Westport_Estate-Westport_County_Mayo_Western_Ireland.html",
+      "rating_icon": "https://www.tripadvisor.com/img/cdsi/img2/ratings/traveler/2.0-70260-4.png",
+      "owner_response": false,
+      "first_seen": "2026-09-20T10:18:42.178838+00:00"
+    },
+    {
+      "platform": "TripAdvisor",
       "id": "1078072911",
       "author": "danielmF2690EQ",
       "rating": 5,
@@ -209,7 +237,7 @@
     "Google": {
       "rating": 4.6,
       "count": 122,
-      "fetched": "2026-09-20T02:27:49.586221+00:00"
+      "fetched": "2026-09-20T10:18:42.178817+00:00"
     }
   }
 }
