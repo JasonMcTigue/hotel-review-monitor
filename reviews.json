@@ -4,6 +4,20 @@
   "reviews": [
     {
       "platform": "Google",
+      "id": "google:Karen Burke:1789855110",
+      "author": "Karen Burke",
+      "rating": 5,
+      "title": "",
+      "text": "A beautiful experience from start to finish. The room was lovel, warm and very comfortable with everything at hand. The food was outstanding, as was the wine (we ate in the bar).  Staff are excellent.  They're a credit to themselves and the Senior Management in The Grace.  We're really looking forward to going again soon! Its exactly was we needed in the hospitality sctor in County Mayo.",
+      "published": "2026-09-19T21:58:30+00:00",
+      "date": "2026-09-19",
+      "url": "https://www.google.com/maps/contrib/111162226359513591557/reviews",
+      "rating_icon": "",
+      "owner_response": false,
+      "first_seen": "2026-09-20T02:27:49.388122+00:00"
+    },
+    {
+      "platform": "Google",
       "id": "google:Mary Colbert:1789844385",
       "author": "Mary Colbert",
       "rating": 5,
@@ -194,8 +208,8 @@
     },
     "Google": {
       "rating": 4.6,
-      "count": 121,
-      "fetched": "2026-09-19T19:46:56.398987+00:00"
+      "count": 122,
+      "fetched": "2026-09-20T02:27:49.586221+00:00"
     }
   }
 }
