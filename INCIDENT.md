@@ -56,6 +56,15 @@ timer, and re-enables the checker via the API if it is ever disabled anyway.
 - **The schedule is disabled for inactivity** → the keepalive commits keep the
   clock from ever reaching 60 days, and re-enable the workflow if it does.
 
+## Postscript: the watchdog cried wolf (17 and 22 Sep 2026)
+
+The heartbeat sent two false "monitor is silent" emails while the checker was
+passing every 6 hours. It asked GitHub for the latest run with `status=success`,
+and that filtered query is served from a lagging index that is not reliably
+ordered — it answered with runs from 14 Aug and 19 Sep respectively. The
+heartbeat now reads the unfiltered run list, which is newest-first, picks the
+most recent success itself, and re-queries once before alerting.
+
 ## Lessons worth keeping
 
 1. **An empty result is not a negative result.** Any fetcher that can fail

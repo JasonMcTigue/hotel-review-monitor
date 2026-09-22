@@ -619,27 +619,49 @@ def heartbeat(max_age_hours=24):
     """
     repo = os.environ.get("GITHUB_REPOSITORY", "")
     token = os.environ.get("GITHUB_TOKEN", "")
-    resp = requests.get(
-        f"https://api.github.com/repos/{repo}/actions/workflows/check-reviews.yml/runs",
-        params={"status": "success", "per_page": 1},
-        headers={"Authorization": f"Bearer {token}",
-                 "Accept": "application/vnd.github+json"},
-        timeout=10,
-    )
-    if resp.status_code != 200:
-        raise ReviewFetchError(f"GitHub API: HTTP {resp.status_code} — {resp.text[:200]}")
 
-    runs = resp.json().get("workflow_runs", [])
-    if not runs:
+    def latest_success():
+        # Deliberately unfiltered. Asking the API for `status=success` serves
+        # the answer from a secondary index that lags and is not reliably
+        # ordered: on 17 Sep and 22 Sep 2026 it returned a run days old while
+        # the checker was passing every 6 hours, and both times this function
+        # emailed the hotel a false "monitor is silent" alarm. The plain run
+        # list is newest-first, so filtering client-side is accurate. A page
+        # of 30 covers a week of 6-hourly runs — plenty to find a success in.
+        resp = requests.get(
+            f"https://api.github.com/repos/{repo}/actions/workflows/check-reviews.yml/runs",
+            params={"per_page": 30},
+            headers={"Authorization": f"Bearer {token}",
+                     "Accept": "application/vnd.github+json"},
+            timeout=10,
+        )
+        if resp.status_code != 200:
+            raise ReviewFetchError(f"GitHub API: HTTP {resp.status_code} — {resp.text[:200]}")
+        runs = resp.json().get("workflow_runs", [])
+        return max((r for r in runs if r.get("conclusion") == "success"),
+                   key=lambda r: r["created_at"], default=None)
+
+    def age_hours(run):
+        return (datetime.now(timezone.utc) - parse_ts(run["created_at"])).total_seconds() / 3600
+
+    run = latest_success()
+    if run is None:
         print("No successful runs on record yet.")
         return
 
-    last = parse_ts(runs[0]["created_at"])
-    age = datetime.now(timezone.utc) - last
-    hours = age.total_seconds() / 3600
-    print(f"Last successful check: {runs[0]['created_at']} ({hours:.1f}h ago)")
-    if hours <= max_age_hours:
+    print(f"Last successful check: {run['created_at']} ({age_hours(run):.1f}h ago)")
+    if age_hours(run) <= max_age_hours:
         return
+
+    # One stale answer must not reach the hotel's inbox. Re-ask before
+    # alerting, and believe whichever response is more recent.
+    retry = latest_success()
+    if retry is not None and retry["created_at"] > run["created_at"]:
+        run = retry
+        print(f"Re-checked: {run['created_at']} ({age_hours(run):.1f}h ago)")
+        if age_hours(run) <= max_age_hours:
+            return
+    hours = age_hours(run)
 
     send_html(
         f"⚠️ Review monitor is silent — {HOTEL_NAME}",
@@ -648,7 +670,7 @@ def heartbeat(max_age_hours=24):
       <h2 style="color:#c0392b;">Review monitor has stopped reporting</h2>
       <p style="color:#333;">The last successful review check was
          <strong>{hours:.0f} hours ago</strong>
-         ({runs[0]['created_at'][:16].replace('T', ' ')} UTC).</p>
+         ({run['created_at'][:16].replace('T', ' ')} UTC).</p>
       <p style="color:#666;">New reviews for {HOTEL_NAME} may be going unnoticed.
          Common causes: the schedule was disabled for repository inactivity, an
          API key expired, or Google Cloud billing lapsed.</p>
