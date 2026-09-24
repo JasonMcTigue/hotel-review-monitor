@@ -3,6 +3,20 @@
   "google_place_id": "ChIJRSMLtd5lWUgR1ZANfvIm4Dg",
   "reviews": [
     {
+      "platform": "TripAdvisor",
+      "id": "1078664913",
+      "author": "Sparklyprincess29",
+      "rating": 5,
+      "title": "Exceptional Experience",
+      "text": "We spent Saturday night at The Grace Hotel, enjoying the evening in Kelly’s Bar, and I have to say, it was an absolutely wonderful experience from start to finish.\n\nFrom the moment we arrived, we were made to feel incredibly welcome. We had the pleasure of meeting David, the Restaurant Manager, and he was exceptional. David was warm, charming, professional and incredibly attentive. He has a fantastic way of making guests feel genuinely valued, and his hospitality immediately set the tone for what turned into a brilliant evening. You can tell he takes enormous pride in both the hotel and the experience he provides to his guests.\n\nI also have to give a very special mention to Rodrigo and Carlos, who were simply fantastic. They were polite, extremely well-mannered, attentive and so helpful throughout the evening. What made them stand out even more was their wonderful sense of humour and friendly personalities. They managed to provide impeccable service while also making us laugh and feel ",
+      "published": "2026-09-21T05:14:27.496Z",
+      "date": "2026-09-21",
+      "url": "https://www.tripadvisor.com/ShowUserReviews-g186627-d34251217-r1078664913-The_Grace_Westport_Estate-Westport_County_Mayo_Western_Ireland.html",
+      "rating_icon": "https://www.tripadvisor.com/img/cdsi/img2/ratings/traveler/5.0-70260-4.png",
+      "owner_response": false,
+      "first_seen": "2026-09-24T10:46:05.045945+00:00"
+    },
+    {
       "platform": "Google",
       "id": "google:james quinlivan:1789926622",
       "author": "james quinlivan",
@@ -251,7 +265,7 @@
     "Google": {
       "rating": 4.6,
       "count": 123,
-      "fetched": "2026-09-24T02:18:27.730331+00:00"
+      "fetched": "2026-09-24T10:46:05.045926+00:00"
     }
   }
 }
