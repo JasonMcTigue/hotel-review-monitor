@@ -46,6 +46,34 @@
     },
     {
       "platform": "Google",
+      "id": "google:Lauren Marie:1789919464",
+      "author": "Lauren Marie",
+      "rating": 5,
+      "title": "",
+      "text": "We were only here for one night but this was our favorite stop during our recent trip in Ireland. This property is top-notch in every regard - the rooms are beautiful and clean, the service is friendly and helpful and the breakfast is plentiful and delicious. We loved being able to walk into town and we wish we had more time to spend in the area. I'd definitely return to The Grace and I'd highly recommend it to anyone that plans on spending time in Westport.",
+      "published": "2026-09-20T15:51:04+00:00",
+      "date": "2026-09-20",
+      "url": "https://www.google.com/maps/contrib/105086812914243463444/reviews",
+      "rating_icon": "",
+      "owner_response": false,
+      "first_seen": "2026-09-25T20:52:46.295948+00:00"
+    },
+    {
+      "platform": "Google",
+      "id": "google:Karen Burke:1789912564",
+      "author": "Karen Burke",
+      "rating": 5,
+      "title": "",
+      "text": "A beautiful experience from start to finish. The room was lovely, warm and very comfortable with everything at hand. The food was outstanding, as was the wine (we ate in the bar).  Staff are excellent.  They're a credit to themselves and the Senior Management in The Grace.  We're really looking forward to going again soon! Its exactly was we needed in the hospitality sector in County Mayo.",
+      "published": "2026-09-20T13:56:04+00:00",
+      "date": "2026-09-20",
+      "url": "https://www.google.com/maps/contrib/111162226359513591557/reviews",
+      "rating_icon": "",
+      "owner_response": false,
+      "first_seen": "2026-09-25T20:52:46.295948+00:00"
+    },
+    {
+      "platform": "Google",
       "id": "google:Karen Burke:1789855110",
       "author": "Karen Burke",
       "rating": 5,
@@ -278,8 +306,8 @@
     },
     "Google": {
       "rating": 4.6,
-      "count": 124,
-      "fetched": "2026-09-25T16:10:07.990374+00:00"
+      "count": 125,
+      "fetched": "2026-09-25T20:52:46.557660+00:00"
     }
   }
 }
