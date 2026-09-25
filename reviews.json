@@ -18,6 +18,20 @@
     },
     {
       "platform": "Google",
+      "id": "google:Aron Moran:1789942145",
+      "author": "Aron Moran",
+      "rating": 5,
+      "title": "",
+      "text": "Absolutely lovely venue and the steak I had down in the restaurant was perfect.",
+      "published": "2026-09-20T22:09:05+00:00",
+      "date": "2026-09-20",
+      "url": "https://www.google.com/maps/contrib/117933202306452022775/reviews",
+      "rating_icon": "",
+      "owner_response": false,
+      "first_seen": "2026-09-25T16:10:07.762967+00:00"
+    },
+    {
+      "platform": "Google",
       "id": "google:james quinlivan:1789926622",
       "author": "james quinlivan",
       "rating": 5,
@@ -264,8 +278,8 @@
     },
     "Google": {
       "rating": 4.6,
-      "count": 123,
-      "fetched": "2026-09-25T10:50:50.664494+00:00"
+      "count": 124,
+      "fetched": "2026-09-25T16:10:07.990374+00:00"
     }
   }
 }
