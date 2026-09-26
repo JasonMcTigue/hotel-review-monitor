@@ -3,6 +3,20 @@
   "google_place_id": "ChIJRSMLtd5lWUgR1ZANfvIm4Dg",
   "reviews": [
     {
+      "platform": "Google",
+      "id": "google:John Keaveney:1790413185",
+      "author": "John Keaveney",
+      "rating": 5,
+      "title": "",
+      "text": "A beautiful hotel with extremely friendly staff and amazing food. We were really well looked after by the whole team at the Grace for our wedding. A huge thanks to Mary, Ciaran and Lauren who couldn't have done more to make sure all our guests had a great time and were well looked after. We cant wait to come back!",
+      "published": "2026-09-26T08:59:45+00:00",
+      "date": "2026-09-26",
+      "url": "https://www.google.com/maps/contrib/111360436563311035216/reviews",
+      "rating_icon": "",
+      "owner_response": false,
+      "first_seen": "2026-09-26T10:31:38.855649+00:00"
+    },
+    {
       "platform": "TripAdvisor",
       "id": "1078664913",
       "author": "Sparklyprincess29",
@@ -306,8 +320,8 @@
     },
     "Google": {
       "rating": 4.6,
-      "count": 125,
-      "fetched": "2026-09-26T02:37:20.892719+00:00"
+      "count": 126,
+      "fetched": "2026-09-26T10:31:39.182429+00:00"
     }
   }
 }
