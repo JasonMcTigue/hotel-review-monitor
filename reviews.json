@@ -4,6 +4,20 @@
   "reviews": [
     {
       "platform": "Google",
+      "id": "google:Ciara reilly:1790533519",
+      "author": "Ciara reilly",
+      "rating": 5,
+      "title": "",
+      "text": "Lovely experience recently at the Grace for a wedding. Staff were friendly and helpful. They helped accommodate an early check-in for us. The hotel is very well located, an easy stroll into Westport. Breakfast and food was great.\n\nThe wellness suite is a really lovely experience. Would stay again!",
+      "published": "2026-09-27T18:25:19+00:00",
+      "date": "2026-09-27",
+      "url": "https://www.google.com/maps/contrib/104628578439248707198/reviews",
+      "rating_icon": "",
+      "owner_response": false,
+      "first_seen": "2026-09-28T02:39:19.579862+00:00"
+    },
+    {
+      "platform": "Google",
       "id": "google:John Keaveney:1790413185",
       "author": "John Keaveney",
       "rating": 5,
@@ -321,7 +335,7 @@
     "Google": {
       "rating": 4.6,
       "count": 127,
-      "fetched": "2026-09-27T20:37:26.020137+00:00"
+      "fetched": "2026-09-28T02:39:19.759067+00:00"
     }
   }
 }
