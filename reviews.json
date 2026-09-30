@@ -4,6 +4,20 @@
   "reviews": [
     {
       "platform": "Google",
+      "id": "google:Matiss:1790801442",
+      "author": "Matiss",
+      "rating": 5,
+      "title": "",
+      "text": "My stay at The Grace was enjoyable. The sauna and pool facilities were excellent, and the staff were friendly. I particularly enjoyed the steak, and the breakfast offered a great variety of options.\nI'll be back.",
+      "published": "2026-09-30T20:50:42+00:00",
+      "date": "2026-09-30",
+      "url": "https://www.google.com/maps/contrib/116167892593359810534/reviews",
+      "rating_icon": "",
+      "owner_response": false,
+      "first_seen": "2026-09-30T21:40:52.812390+00:00"
+    },
+    {
+      "platform": "Google",
       "id": "google:A Mc:1790712387",
       "author": "A Mc",
       "rating": 5,
@@ -347,9 +361,9 @@
       "fetched": "2026-09-30T14:21:53.037518+00:00"
     },
     "Google": {
-      "rating": 4.6,
-      "count": 128,
-      "fetched": "2026-09-30T17:15:58.719533+00:00"
+      "rating": 4.7,
+      "count": 129,
+      "fetched": "2026-09-30T21:40:53.048950+00:00"
     }
   }
 }
