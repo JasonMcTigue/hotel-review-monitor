@@ -4,6 +4,20 @@
   "reviews": [
     {
       "platform": "Google",
+      "id": "google:A Mc:1790712387",
+      "author": "A Mc",
+      "rating": 5,
+      "title": "",
+      "text": "We recently got married at The Grace and have stayed there once previously and cannot recommend it enough.\n\nFrom the very beginning of the planning process right through to our wedding day, the team at The Grace could not have done more for us. We had around 150 guests, and almost everyone commented on how beautiful the hotel was and, more importantly, how incredible the staff were. From the breakfast team and bartenders to the receptionists, spa staff and wedding team, every single person went above and beyond to make everyone feel welcome. It was real Irish hospitality at its finest.\n\nThe hotel itself and the events space are absolutely stunning, set within beautiful woodland surroundings. It provided the most perfect backdrop for our wedding, and so many of our guests were visiting Westport for the first time. They all left saying how much they loved it and how keen they were to return.\n\nHopefully, we'll have the chance to return to The Grace for another wedding in the future! ❤️",
+      "published": "2026-09-29T20:06:27+00:00",
+      "date": "2026-09-29",
+      "url": "https://www.google.com/maps/contrib/118243668321268860357/reviews",
+      "rating_icon": "",
+      "owner_response": false,
+      "first_seen": "2026-09-30T03:04:27.513083+00:00"
+    },
+    {
+      "platform": "Google",
       "id": "google:Ciara reilly:1790533519",
       "author": "Ciara reilly",
       "rating": 5,
@@ -335,7 +349,7 @@
     "Google": {
       "rating": 4.6,
       "count": 128,
-      "fetched": "2026-09-29T21:40:13.010539+00:00"
+      "fetched": "2026-09-30T03:04:27.704488+00:00"
     }
   }
 }
