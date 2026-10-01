@@ -31,6 +31,20 @@
       "first_seen": "2026-09-30T03:04:27.513083+00:00"
     },
     {
+      "platform": "TripAdvisor",
+      "id": "1079546290",
+      "author": "alecbromley",
+      "rating": 5,
+      "title": "The Spa was wonderful",
+      "text": "We stayed for 3 nights at the Grace Hotel. We had a wonderful time, the room was comfortable and clean. We made use of the Spa too.\n\nGreat friendly staff. We're already looking forward to our next visit.",
+      "published": "2026-09-28T09:27:45.876Z",
+      "date": "2026-09-28",
+      "url": "",
+      "rating_icon": "https://www.tripadvisor.com/img/cdsi/img2/ratings/traveler/5.0-70260-4.png",
+      "owner_response": false,
+      "first_seen": "2026-10-01T12:05:00.540818+00:00"
+    },
+    {
       "platform": "Google",
       "id": "google:Ciara reilly:1790533519",
       "author": "Ciara reilly",
@@ -363,7 +377,7 @@
     "Google": {
       "rating": 4.7,
       "count": 129,
-      "fetched": "2026-10-01T03:10:50.074352+00:00"
+      "fetched": "2026-10-01T12:05:00.540555+00:00"
     }
   }
 }
