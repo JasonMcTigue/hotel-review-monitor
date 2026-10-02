@@ -4,6 +4,20 @@
   "reviews": [
     {
       "platform": "Google",
+      "id": "google:Ebony:1790932991",
+      "author": "Ebony",
+      "rating": 5,
+      "title": "",
+      "text": "Beautiful property and lovely staff.",
+      "published": "2026-10-02T09:23:11+00:00",
+      "date": "2026-10-02",
+      "url": "https://www.google.com/maps/contrib/108159919272151522775/reviews",
+      "rating_icon": "",
+      "owner_response": false,
+      "first_seen": "2026-10-02T11:36:08.877050+00:00"
+    },
+    {
+      "platform": "Google",
       "id": "google:Matiss:1790801442",
       "author": "Matiss",
       "rating": 5,
@@ -376,8 +390,8 @@
     },
     "Google": {
       "rating": 4.7,
-      "count": 129,
-      "fetched": "2026-10-02T03:12:31.879385+00:00"
+      "count": 130,
+      "fetched": "2026-10-02T11:36:09.055461+00:00"
     }
   }
 }
