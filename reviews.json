@@ -31,6 +31,34 @@
       "first_seen": "2026-09-30T21:40:52.812390+00:00"
     },
     {
+      "platform": "TripAdvisor",
+      "id": "1079979836",
+      "author": "tracygX4107SV",
+      "rating": 5,
+      "title": "Fantastic Hotel & Wonderful Experience",
+      "text": "We had a fantastic 2 night stay and honestly couldn’t fault it. The spa treatment (restorative ritual) with Kate was one of the best I’ve ever had — she was amazing and made the experience so relaxing. It was definitely the highlight of the stay. \nThe food in Kelly’s Bar was absolutely delicious, and the atmosphere throughout the hotel was so calm and relaxing. Breakfast was outstanding, with so much choice and everything beautifully presented.\nThe hotel itself is immaculate, which is no surprise as it’s brand new. The staff were all extremely friendly, welcoming and helpful, which really added to our stay.\nThe hotel is very conveniently located less than 5 mins walk to the centre of westport.  \nOverall, a beautiful hotel with fantastic food, wonderful staff and a lovely relaxing atmosphere. We will definitely be back! Highly recommended.",
+      "published": "2026-09-30T13:18:24.309Z",
+      "date": "2026-09-30",
+      "url": "https://www.tripadvisor.com/ShowUserReviews-g186627-d34251217-r1079979836-The_Grace_Westport_Estate-Westport_County_Mayo_Western_Ireland.html",
+      "rating_icon": "https://www.tripadvisor.com/img/cdsi/img2/ratings/traveler/5.0-70260-4.png",
+      "owner_response": false,
+      "first_seen": "2026-10-03T10:49:48.822416+00:00"
+    },
+    {
+      "platform": "TripAdvisor",
+      "id": "1079930980",
+      "author": "X7447UFmaurod",
+      "rating": 5,
+      "title": "A loverly place where relex",
+      "text": "I stayed there for three days while on a business trip. It was lovely to experience the welcoming, elegant and warm Irish atmosphere. I would definitely recommend it.",
+      "published": "2026-09-30T06:37:10.488Z",
+      "date": "2026-09-30",
+      "url": "https://www.tripadvisor.com/ShowUserReviews-g186627-d34251217-r1079930980-The_Grace_Westport_Estate-Westport_County_Mayo_Western_Ireland.html",
+      "rating_icon": "https://www.tripadvisor.com/img/cdsi/img2/ratings/traveler/5.0-70260-4.png",
+      "owner_response": false,
+      "first_seen": "2026-10-03T10:49:48.822416+00:00"
+    },
+    {
       "platform": "Google",
       "id": "google:A Mc:1790712387",
       "author": "A Mc",
@@ -391,7 +419,7 @@
     "Google": {
       "rating": 4.7,
       "count": 130,
-      "fetched": "2026-10-03T02:58:18.247118+00:00"
+      "fetched": "2026-10-03T10:49:48.822237+00:00"
     }
   }
 }
