@@ -17,6 +17,20 @@
       "first_seen": "2026-10-02T11:36:08.877050+00:00"
     },
     {
+      "platform": "TripAdvisor",
+      "id": "1080152159",
+      "author": "H7392MKkevink",
+      "rating": 5,
+      "title": "Eager to return",
+      "text": "We loved this hotel.  The food is wonderful, and so are the rooms.  The staff was very attentive and helpful, including about my curiosity regarding which whiskey I should try.  I had a particular problem caused by my own carelessness.  The hotel staff went out of their way to fix it, and they made it happen.  It was top shelf customer service.  The room was spotless and comfortable.  The town of Westport is great, and we hope to return.  If we do, there is no question about where we will stay.",
+      "published": "2026-10-01T21:40:05.348Z",
+      "date": "2026-10-01",
+      "url": "https://www.tripadvisor.com/ShowUserReviews-g186627-d34251217-r1080152159-The_Grace_Westport_Estate-Westport_County_Mayo_Western_Ireland.html",
+      "rating_icon": "https://www.tripadvisor.com/img/cdsi/img2/ratings/traveler/5.0-70260-4.png",
+      "owner_response": false,
+      "first_seen": "2026-10-04T03:27:43.220686+00:00"
+    },
+    {
       "platform": "Google",
       "id": "google:Matiss:1790801442",
       "author": "Matiss",
@@ -419,7 +433,7 @@
     "Google": {
       "rating": 4.7,
       "count": 130,
-      "fetched": "2026-10-03T20:21:22.277168+00:00"
+      "fetched": "2026-10-04T03:27:43.220494+00:00"
     }
   }
 }
