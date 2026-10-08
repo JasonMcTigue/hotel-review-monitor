@@ -3,6 +3,20 @@
   "google_place_id": "ChIJRSMLtd5lWUgR1ZANfvIm4Dg",
   "reviews": [
     {
+      "platform": "Google",
+      "id": "google:C. K.:1791455119",
+      "author": "C. K.",
+      "rating": 5,
+      "title": "",
+      "text": "Fantastisch!\nNobel mit gutem Preis Leistungsverhältnis.",
+      "published": "2026-10-08T10:25:19+00:00",
+      "date": "2026-10-08",
+      "url": "https://www.google.com/maps/contrib/113142674898733060127/reviews",
+      "rating_icon": "",
+      "owner_response": false,
+      "first_seen": "2026-10-08T22:39:58.676994+00:00"
+    },
+    {
       "platform": "TripAdvisor",
       "id": "1080660491",
       "author": "SLIGOHOPPER",
@@ -503,7 +517,7 @@
     "Google": {
       "rating": 4.7,
       "count": 133,
-      "fetched": "2026-10-08T12:29:34.492059+00:00"
+      "fetched": "2026-10-08T22:39:58.903388+00:00"
     }
   }
 }
