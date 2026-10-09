@@ -18,6 +18,20 @@
     },
     {
       "platform": "TripAdvisor",
+      "id": "1080764432",
+      "author": "roisins2017",
+      "rating": 5,
+      "title": "Exquisite.",
+      "text": "Arriving at the Grace Hotel we were greeted by a very helpful Man and two lovely  Receptionists . We were shown to a gorgeous room by the Man who also carried our suitcase. The inside of this Hotel is truely  magnificent. So clean and tastefully decorated and l have to say that all members of the staff  were so polite and helpful. The waiters in the Restaurant couldn’t do enough for us and the food was delicious. We really loved our stay there. The bed was huge and so comfortable and the room was  warm and inviting. Breakfast is a feast and there was more than enough and choice for everyone.  One little thing l would like to point out is this. It was difficult to find the Hotel so what l would say to people going there is this take the Newport road through the town and when you come to the  Maxol Garage on your right take the left hand turn  before the Garage. You will see a small sign for the Hotel. and just drive straight down that road. That’s just a minor thing but we will definite",
+      "published": "2026-10-06T13:59:02.005Z",
+      "date": "2026-10-06",
+      "url": "https://www.tripadvisor.com/ShowUserReviews-g186627-d34251217-r1080764432-The_Grace_Westport_Estate-Westport_County_Mayo_Western_Ireland.html",
+      "rating_icon": "https://www.tripadvisor.com/img/cdsi/img2/ratings/traveler/5.0-70260-4.png",
+      "owner_response": false,
+      "first_seen": "2026-10-09T03:43:53.348904+00:00"
+    },
+    {
+      "platform": "TripAdvisor",
       "id": "1080660491",
       "author": "SLIGOHOPPER",
       "rating": 5,
@@ -517,7 +531,7 @@
     "Google": {
       "rating": 4.7,
       "count": 133,
-      "fetched": "2026-10-08T22:39:58.903388+00:00"
+      "fetched": "2026-10-09T03:43:53.348720+00:00"
     }
   }
 }
