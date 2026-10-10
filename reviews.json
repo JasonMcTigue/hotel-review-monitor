@@ -4,6 +4,20 @@
   "reviews": [
     {
       "platform": "Google",
+      "id": "google:Anna Kuzmina:1791619773",
+      "author": "Anna Kuzmina",
+      "rating": 5,
+      "title": "",
+      "text": "Very vibey place🥰",
+      "published": "2026-10-10T08:09:33+00:00",
+      "date": "2026-10-10",
+      "url": "https://www.google.com/maps/contrib/103943824717167147650/reviews",
+      "rating_icon": "",
+      "owner_response": false,
+      "first_seen": "2026-10-10T11:36:25.499361+00:00"
+    },
+    {
+      "platform": "Google",
       "id": "google:C. K.:1791455119",
       "author": "C. K.",
       "rating": 5,
@@ -530,8 +544,8 @@
     },
     "Google": {
       "rating": 4.7,
-      "count": 133,
-      "fetched": "2026-10-10T03:26:09.459475+00:00"
+      "count": 135,
+      "fetched": "2026-10-10T11:36:25.800774+00:00"
     }
   }
 }
