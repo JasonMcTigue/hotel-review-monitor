@@ -4,6 +4,20 @@
   "reviews": [
     {
       "platform": "Google",
+      "id": "google:Kathagena:1791707708",
+      "author": "Kathagena",
+      "rating": 5,
+      "title": "",
+      "text": "We were redirected here by chance and had a wonderful stay. We were already on our way to Westport when our originally booked hotel called to cancel our reservation. However, they had booked us a replacement at The Grace, which is nearby. In retrospect, we were lucky, as we absolutely loved it. The light lunch and breakfast were excellent. The staff were exceptionally attentive and friendly! This really stood out to us. From the receptionists to the bellboys, the cleaning staff, the waiters, etc. – everyone was fantastic!",
+      "published": "2026-10-11T08:35:08+00:00",
+      "date": "2026-10-11",
+      "url": "https://www.google.com/maps/contrib/117879489190469377572/reviews",
+      "rating_icon": "",
+      "owner_response": false,
+      "first_seen": "2026-10-11T11:49:53.379779+00:00"
+    },
+    {
+      "platform": "Google",
       "id": "google:Romy Dunford:1791628193",
       "author": "Romy Dunford",
       "rating": 5,
@@ -558,8 +572,8 @@
     },
     "Google": {
       "rating": 4.7,
-      "count": 135,
-      "fetched": "2026-10-11T02:59:18.213939+00:00"
+      "count": 136,
+      "fetched": "2026-10-11T11:49:53.636551+00:00"
     }
   }
 }
