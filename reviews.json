@@ -4,6 +4,20 @@
   "reviews": [
     {
       "platform": "Google",
+      "id": "google:Ocean Retreat:1791797194",
+      "author": "Ocean Retreat",
+      "rating": 5,
+      "title": "",
+      "text": "We had the most wonderful stay at The Grace in Westport, visiting for a family wedding, and cannot recommend the hotel highly enough.\n\nFrom the moment we arrived, the staff were exceptional. Nothing was ever too much trouble, and every interaction felt genuinely warm, thoughtful and generous. It’s rare to come across a team who go so far out of their way to make your stay special.\n\nThe newly refurbished interiors are absolutely beautiful. As an interior designer, I tend to notice the finer details, and I was genuinely impressed by the quality of the finishes, the considered design choices and the attention to detail throughout. It is a beautiful refurbishment, and it is clear that an enormous amount of thought and care has gone into every aspect.\n\nWe also asked the hotel to arrange a babysitter for our children, and Beatrice was absolutely marvellous. She made such a lovely impression on the children, even bringing them a little gift, and settled them into bed so we could enjoy the wed",
+      "published": "2026-10-12T09:26:34+00:00",
+      "date": "2026-10-12",
+      "url": "https://www.google.com/maps/contrib/107801674388306516565/reviews",
+      "rating_icon": "",
+      "owner_response": false,
+      "first_seen": "2026-10-12T13:55:35.701456+00:00"
+    },
+    {
+      "platform": "Google",
       "id": "google:Kathagena:1791707708",
       "author": "Kathagena",
       "rating": 5,
@@ -572,8 +586,8 @@
     },
     "Google": {
       "rating": 4.7,
-      "count": 136,
-      "fetched": "2026-10-12T03:22:29.249043+00:00"
+      "count": 137,
+      "fetched": "2026-10-12T13:55:35.874767+00:00"
     }
   }
 }
