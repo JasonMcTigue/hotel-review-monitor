@@ -59,6 +59,20 @@
       "first_seen": "2026-10-10T11:36:25.499361+00:00"
     },
     {
+      "platform": "TripAdvisor",
+      "id": "1081156764",
+      "author": "Relax249380",
+      "rating": 3,
+      "title": "Almost there",
+      "text": "I appreciate that The Grace is newly opened but there are areas they could have spotted and improved by now. Some staff are inexperienced which impacts the guests experience of the hotel. For example constantly asking if we are having a good day. Nice first time but annoying being asked repeatedly. Outside and the interior are tastefully done. My room was spotless and well equipped. I wasn’t able to get the coffee machine working. I gave up after many attempts. The pod would not drop down. I was leaving at that point. \nBreakfast was disappointing. I found the staff weren’t as attentive as I would expect. I had to leave my breakfast to ask for toast while servers were close by and not busy. The Buffet breakfast was disappointing. Ingredients were good, unfortunately they were lukewarm which I find unappetising. A €5 surcharge for French toast and two other items ( which I can’t remember at this moment) on the menu is a bit much considering the B&B rate for the hotel. One lucky find was ",
+      "published": "2026-10-10T07:01:40.494Z",
+      "date": "2026-10-10",
+      "url": "https://www.tripadvisor.com/ShowUserReviews-g186627-d34251217-r1081156764-The_Grace_Westport_Estate-Westport_County_Mayo_Western_Ireland.html",
+      "rating_icon": "https://www.tripadvisor.com/img/cdsi/img2/ratings/traveler/3.0-70260-4.png",
+      "owner_response": false,
+      "first_seen": "2026-10-13T05:32:28.581229+00:00"
+    },
+    {
       "platform": "Google",
       "id": "google:C. K.:1791455119",
       "author": "C. K.",
@@ -587,7 +601,7 @@
     "Google": {
       "rating": 4.7,
       "count": 137,
-      "fetched": "2026-10-12T23:57:55.687240+00:00"
+      "fetched": "2026-10-13T05:32:28.581008+00:00"
     }
   }
 }
