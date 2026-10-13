@@ -4,6 +4,20 @@
   "reviews": [
     {
       "platform": "Google",
+      "id": "google:Yuliia Yemchenko:1791891808",
+      "author": "Yuliia Yemchenko",
+      "rating": 5,
+      "title": "",
+      "text": "I stayed at The Grace for a couple of nights and absolutely loved it! The rooms were cosy, spotless, and beautifully comfortable. The staff were incredibly friendly and welcoming, and both the restaurant and the bar were fantastic! Everything made the stay feel special and relaxing. I had such a wonderful experience and can’t wait to come back! Highly recommend!✨",
+      "published": "2026-10-13T11:43:28+00:00",
+      "date": "2026-10-13",
+      "url": "https://www.google.com/maps/contrib/110150907388558282623/reviews",
+      "rating_icon": "",
+      "owner_response": false,
+      "first_seen": "2026-10-13T22:06:13.500735+00:00"
+    },
+    {
+      "platform": "Google",
       "id": "google:Ocean Retreat:1791797194",
       "author": "Ocean Retreat",
       "rating": 5,
@@ -601,7 +615,7 @@
     "Google": {
       "rating": 4.7,
       "count": 138,
-      "fetched": "2026-10-13T13:12:13.256010+00:00"
+      "fetched": "2026-10-13T22:06:13.685425+00:00"
     }
   }
 }
