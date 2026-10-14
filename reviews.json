@@ -4,6 +4,20 @@
   "reviews": [
     {
       "platform": "Google",
+      "id": "google:Carolyn Cox:1792009475",
+      "author": "Carolyn Cox",
+      "rating": 5,
+      "title": "",
+      "text": "We were on a tour and stayed there two days. Our second night there I got sick and was unable to leave with my group. The hotel was so kind as to let me stay until that afternoon, called to check on how I was feeling and also called a taxi so I could meet up with my travel group at the next hotel. Impeccable  service.",
+      "published": "2026-10-14T20:24:35+00:00",
+      "date": "2026-10-14",
+      "url": "https://www.google.com/maps/contrib/116158496037698199602/reviews",
+      "rating_icon": "",
+      "owner_response": false,
+      "first_seen": "2026-10-14T21:07:21.016420+00:00"
+    },
+    {
+      "platform": "Google",
       "id": "google:Yuliia Yemchenko:1791891808",
       "author": "Yuliia Yemchenko",
       "rating": 5,
@@ -614,8 +628,8 @@
     },
     "Google": {
       "rating": 4.7,
-      "count": 138,
-      "fetched": "2026-10-14T16:11:36.986984+00:00"
+      "count": 139,
+      "fetched": "2026-10-14T21:07:21.428663+00:00"
     }
   }
 }
