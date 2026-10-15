@@ -31,6 +31,20 @@
       "first_seen": "2026-10-13T22:06:13.500735+00:00"
     },
     {
+      "platform": "TripAdvisor",
+      "id": "1081551615",
+      "author": "GracyGalway",
+      "rating": 5,
+      "title": "Fabulous",
+      "text": "The Grace Hotel, Westport - a fabulous experience from arrival to departure! We were celebrating our 20th wedding anniversary, it was such a treat with lots of special touches, from the card and cake in our room to the personable greetings we got from all the staff. Martin on reception, Breda in the restaurant, all the staff are so professional and go out of their way to ensure a 5 star experience, well done all, can’t wait to go back. X",
+      "published": "2026-10-12T15:06:41.897Z",
+      "date": "2026-10-12",
+      "url": "https://www.tripadvisor.com/ShowUserReviews-g186627-d34251217-r1081551615-The_Grace_Westport_Estate-Westport_County_Mayo_Western_Ireland.html",
+      "rating_icon": "https://www.tripadvisor.com/img/cdsi/img2/ratings/traveler/5.0-70260-4.png",
+      "owner_response": false,
+      "first_seen": "2026-10-15T10:34:37.274617+00:00"
+    },
+    {
       "platform": "Google",
       "id": "google:Ocean Retreat:1791797194",
       "author": "Ocean Retreat",
@@ -629,7 +643,7 @@
     "Google": {
       "rating": 4.7,
       "count": 139,
-      "fetched": "2026-10-15T02:25:50.688186+00:00"
+      "fetched": "2026-10-15T10:34:37.274428+00:00"
     }
   }
 }
