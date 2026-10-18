@@ -17,6 +17,34 @@
       "first_seen": "2026-10-16T20:16:25.615807+00:00"
     },
     {
+      "platform": "TripAdvisor",
+      "id": "1081912143",
+      "author": "593louisam",
+      "rating": 3,
+      "title": "our experience did not match the instagram page And impressive marketing campaign",
+      "text": "Lovely hotel, felt the actual hotel does not match the extravagant way it’s marketed on social media, it’s an old hotel that’s been given a modern facelift. It’s not in the Westport estate which the marketing campaign would lead you to think, the estate is sadly is closed for works so you can’t even walk around any grounds, we were disappointed when we realised we were staying just off the road and not even in the estate. Staff were nice however we were met with a really rude household staff member when we asked where the spa was she said “I don’t know the sign says Downstairs” I think if your trying to create a luxury hotel every staff encounter with staff should be positive. The food was great and definitely a highlight. Great night away but would say don’t be led by impressive social media campaign our experience did not match the instagram page!!",
+      "published": "2026-10-15T10:58:00.923Z",
+      "date": "2026-10-15",
+      "url": "https://www.tripadvisor.com/ShowUserReviews-g186627-d34251217-r1081912143-The_Grace_Westport_Estate-Westport_County_Mayo_Western_Ireland.html",
+      "rating_icon": "https://www.tripadvisor.com/img/cdsi/img2/ratings/traveler/3.0-70260-4.png",
+      "owner_response": false,
+      "first_seen": "2026-10-18T10:06:50.390116+00:00"
+    },
+    {
+      "platform": "TripAdvisor",
+      "id": "1081900813",
+      "author": "491mauricec",
+      "rating": 4,
+      "title": "5 star possibly exaggerated",
+      "text": "3 nights B&B with evening meal, lovely hotel, beautiful decor, bedroom ensuite was exceptional with individual heat controls which was great because the hotel lobby and dining room were very cold, excellent breakfast buffet, very friendly efficient staff, reception team very welcoming. I would however question 5 star rating, possibly 4 star max. Spa/pool facilities were excellent except jacuzzi not functioning for the 4 days, staff need additional training in the food service area regarding menu contents, they had to keep going back to check what was included etc., I ate in Black Sheep one night where extra charges applied to my package for items on the menu, this should have been noted when ordering, side orders are extra. No main dinner menu and overall an expensive menu, not a 5 star experience. Food in the Kelly bar on the remaining nights was very good but again staff need to know the menu. I noticed on my second day that full payment was taken from my card, which is noted on the ",
+      "published": "2026-10-15T09:36:02.578Z",
+      "date": "2026-10-15",
+      "url": "https://www.tripadvisor.com/ShowUserReviews-g186627-d34251217-r1081900813-The_Grace_Westport_Estate-Westport_County_Mayo_Western_Ireland.html",
+      "rating_icon": "https://www.tripadvisor.com/img/cdsi/img2/ratings/traveler/4.0-70260-4.png",
+      "owner_response": false,
+      "first_seen": "2026-10-18T10:06:50.390116+00:00"
+    },
+    {
       "platform": "Google",
       "id": "google:Carolyn Cox:1792009475",
       "author": "Carolyn Cox",
@@ -657,7 +685,7 @@
     "Google": {
       "rating": 4.7,
       "count": 140,
-      "fetched": "2026-10-18T02:12:01.618904+00:00"
+      "fetched": "2026-10-18T10:06:50.389858+00:00"
     }
   }
 }
