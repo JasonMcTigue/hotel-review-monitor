@@ -3,6 +3,20 @@
   "google_place_id": "ChIJRSMLtd5lWUgR1ZANfvIm4Dg",
   "reviews": [
     {
+      "platform": "TripAdvisor",
+      "id": "1082256308",
+      "author": "vilmag851",
+      "rating": 5,
+      "title": "Amazing experience",
+      "text": "We had a wonderful stay! The service was honestly the best we’ve ever experienced in a hotel. The staff were so friendly and welcoming, and the food was absolutely delicious. Everything was just perfect, and we couldn’t have asked for more. We’d highly recommend this hotel and would love to come back! ❤️",
+      "published": "2026-10-19T20:35:39.919Z",
+      "date": "2026-10-19",
+      "url": "https://www.tripadvisor.com/ShowUserReviews-g186627-d34251217-r1082256308-The_Grace_Westport_Estate-Westport_County_Mayo_Western_Ireland.html",
+      "rating_icon": "https://www.tripadvisor.com/img/cdsi/img2/ratings/traveler/5.0-70260-4.png",
+      "owner_response": false,
+      "first_seen": "2026-10-22T10:52:19.304873+00:00"
+    },
+    {
       "platform": "Google",
       "id": "google:Chris McIvor:1792179515",
       "author": "Chris McIvor",
@@ -685,7 +699,7 @@
     "Google": {
       "rating": 4.7,
       "count": 140,
-      "fetched": "2026-10-22T02:32:15.391782+00:00"
+      "fetched": "2026-10-22T10:52:19.304753+00:00"
     }
   }
 }
