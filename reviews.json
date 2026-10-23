@@ -4,6 +4,20 @@
   "reviews": [
     {
       "platform": "Google",
+      "id": "google:John Hayes:1792777184",
+      "author": "John Hayes",
+      "rating": 5,
+      "title": "",
+      "text": "Great hotel. Stayed for a three day mid week break and couldn’t fault it. Lovely staff, great food, nice room. Breakfast was particularly good",
+      "published": "2026-10-23T17:39:44+00:00",
+      "date": "2026-10-23",
+      "url": "https://www.google.com/maps/contrib/103679246273960671182/reviews",
+      "rating_icon": "",
+      "owner_response": false,
+      "first_seen": "2026-10-23T20:48:59.430234+00:00"
+    },
+    {
+      "platform": "Google",
       "id": "google:Victor:1792669471",
       "author": "Victor",
       "rating": 5,
@@ -726,8 +740,8 @@
     },
     "Google": {
       "rating": 4.7,
-      "count": 141,
-      "fetched": "2026-10-23T16:08:23.892101+00:00"
+      "count": 142,
+      "fetched": "2026-10-23T20:48:59.626012+00:00"
     }
   }
 }
