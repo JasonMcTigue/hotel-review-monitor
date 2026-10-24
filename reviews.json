@@ -4,6 +4,20 @@
   "reviews": [
     {
       "platform": "Google",
+      "id": "google:Niluka Vidyarathne:1792856698",
+      "author": "Niluka Vidyarathne",
+      "rating": 5,
+      "title": "",
+      "text": "Fabulous hotel. Staff were very friendly. Breakfast was Fabulous 👌",
+      "published": "2026-10-24T15:44:58+00:00",
+      "date": "2026-10-24",
+      "url": "https://www.google.com/maps/contrib/107448919168780023756/reviews",
+      "rating_icon": "",
+      "owner_response": false,
+      "first_seen": "2026-10-24T19:58:59.665388+00:00"
+    },
+    {
+      "platform": "Google",
       "id": "google:John Hayes:1792777184",
       "author": "John Hayes",
       "rating": 5,
@@ -740,8 +754,8 @@
     },
     "Google": {
       "rating": 4.7,
-      "count": 142,
-      "fetched": "2026-10-24T15:04:50.538784+00:00"
+      "count": 143,
+      "fetched": "2026-10-24T19:58:59.849943+00:00"
     }
   }
 }
