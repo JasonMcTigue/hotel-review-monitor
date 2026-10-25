@@ -46,6 +46,20 @@
     },
     {
       "platform": "TripAdvisor",
+      "id": "1082759344",
+      "author": "EimerDo",
+      "rating": 5,
+      "title": "This hotel gives exceptional customer service",
+      "text": "Fabulous hotel but what makes it stand out for my friends and I when we visited is their customer service.  Their friendliness without it being either OTT or just polished  is exceptional.  Nothing is a problem and yet they all have a sense of fun - seem happy in their jobs  no matter the role.  The spa, swimming pool etc gorgeous.  The bedroom standard very high quality.",
+      "published": "2026-10-22T06:55:31.071Z",
+      "date": "2026-10-22",
+      "url": "https://www.tripadvisor.com/ShowUserReviews-g186627-d34251217-r1082759344-The_Grace_Westport_Estate-Westport_County_Mayo_Western_Ireland.html",
+      "rating_icon": "https://www.tripadvisor.com/img/cdsi/img2/ratings/traveler/5.0-70260-4.png",
+      "owner_response": false,
+      "first_seen": "2026-10-25T10:24:54.485901+00:00"
+    },
+    {
+      "platform": "TripAdvisor",
       "id": "1082333669",
       "author": "martinnR7604ZE",
       "rating": 5,
@@ -755,7 +769,7 @@
     "Google": {
       "rating": 4.7,
       "count": 143,
-      "fetched": "2026-10-25T02:22:38.910350+00:00"
+      "fetched": "2026-10-25T10:24:54.485704+00:00"
     }
   }
 }
