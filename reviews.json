@@ -4,6 +4,34 @@
   "reviews": [
     {
       "platform": "Google",
+      "id": "google:Ciara Jolly:1793013866",
+      "author": "Ciara Jolly",
+      "rating": 5,
+      "title": "",
+      "text": "We attended a wedding here over the weekend and WOW the entire place every single detail you can tell is hand picked, whoever is in charge of the decor take a bow it was unreal.\nEven down to the uniforms the staff wore every little thing all tied together the staff were so friendly and the man who came out with an umbrella to the car in the storm what a hero , our room was huge and absolutely beautiful the little touches the water and coffee left and the gorgeous “ground” range for the bathrooms absolutely love this stuff.\nDidn’t get to the spa unfortunately but I heard it was also amazing which I don’t doubt.\nThe food at the wedding was amazing so so nice , but the breakfast the next morning I’m telling you now is probably the best breakfast spread I have ever seen or had it was outstanding!\nWe so enjoyed our stay and will definitely be returning an absolute gem in the west.",
+      "published": "2026-10-26T11:24:26+00:00",
+      "date": "2026-10-26",
+      "url": "https://www.google.com/maps/contrib/117561320033775455345/reviews",
+      "rating_icon": "",
+      "owner_response": false,
+      "first_seen": "2026-10-26T11:53:54.560612+00:00"
+    },
+    {
+      "platform": "Google",
+      "id": "google:Andrew Kirby:1793004052",
+      "author": "Andrew Kirby",
+      "rating": 5,
+      "title": "",
+      "text": "We had our wedding here in October 2026. It was perfect - service, venue, staff, food, all were exceptional.",
+      "published": "2026-10-26T08:40:52+00:00",
+      "date": "2026-10-26",
+      "url": "https://www.google.com/maps/contrib/114290751957502310656/reviews",
+      "rating_icon": "",
+      "owner_response": false,
+      "first_seen": "2026-10-26T11:53:54.560612+00:00"
+    },
+    {
+      "platform": "Google",
       "id": "google:Niluka Vidyarathne:1792856698",
       "author": "Niluka Vidyarathne",
       "rating": 5,
@@ -768,8 +796,8 @@
     },
     "Google": {
       "rating": 4.7,
-      "count": 143,
-      "fetched": "2026-10-26T02:22:46.312551+00:00"
+      "count": 145,
+      "fetched": "2026-10-26T11:53:54.790048+00:00"
     }
   }
 }
