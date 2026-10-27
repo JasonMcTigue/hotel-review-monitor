@@ -59,6 +59,20 @@
       "first_seen": "2026-10-24T19:58:59.665388+00:00"
     },
     {
+      "platform": "TripAdvisor",
+      "id": "1083040745",
+      "author": "aadrienner",
+      "rating": 5,
+      "title": "Ten out of ten 👏👏👏",
+      "text": "A perfect experience on every level. Mary set the tone on arrival with her warm friendly smile and her obvious pride in The Grace. \nOur room was very comfortable, well appointed , spacious and cosy. \nLunch was excellent, Mansa looked after us so well. Also at dinner she preempted our every need. Food was delicious, a wonderful experience on every level. \nThen there was Breeda at breakfast.. what a wonderful friendly and competent host. She is truly passionate about her job and it shows. \nWe had a fabulous time… thank you.\n\nWe’ll be back.",
+      "published": "2026-10-24T13:35:15.812Z",
+      "date": "2026-10-24",
+      "url": "https://www.tripadvisor.com/ShowUserReviews-g186627-d34251217-r1083040745-The_Grace_Westport_Estate-Westport_County_Mayo_Western_Ireland.html",
+      "rating_icon": "https://www.tripadvisor.com/img/cdsi/img2/ratings/traveler/5.0-70260-4.png",
+      "owner_response": false,
+      "first_seen": "2026-10-27T11:17:17.842851+00:00"
+    },
+    {
       "platform": "Google",
       "id": "google:John Hayes:1792777184",
       "author": "John Hayes",
@@ -811,7 +825,7 @@
     "Google": {
       "rating": 4.7,
       "count": 146,
-      "fetched": "2026-10-27T02:57:53.563323+00:00"
+      "fetched": "2026-10-27T11:17:17.842705+00:00"
     }
   }
 }
