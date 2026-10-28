@@ -45,6 +45,20 @@
       "first_seen": "2026-10-26T11:53:54.560612+00:00"
     },
     {
+      "platform": "TripAdvisor",
+      "id": "1083208763",
+      "author": "knahs",
+      "rating": 3,
+      "title": "No air conditioning in hotel room",
+      "text": "Very nice hotel (especially the breakfast buffet).  Room was clean but could not get it cool enough.  They did supply a fan which helped some but, at least for me, I did not sleep well because the room was too hot.  They indicated there is no air conditioning.",
+      "published": "2026-10-25T21:29:20.63Z",
+      "date": "2026-10-25",
+      "url": "https://www.tripadvisor.com/ShowUserReviews-g186627-d34251217-r1083208763-The_Grace_Westport_Estate-Westport_County_Mayo_Western_Ireland.html",
+      "rating_icon": "https://www.tripadvisor.com/img/cdsi/img2/ratings/traveler/3.0-70260-4.png",
+      "owner_response": false,
+      "first_seen": "2026-10-28T11:51:02.104973+00:00"
+    },
+    {
       "platform": "Google",
       "id": "google:Niluka Vidyarathne:1792856698",
       "author": "Niluka Vidyarathne",
@@ -825,7 +839,7 @@
     "Google": {
       "rating": 4.7,
       "count": 146,
-      "fetched": "2026-10-28T03:07:47.621298+00:00"
+      "fetched": "2026-10-28T11:51:02.104784+00:00"
     }
   }
 }
