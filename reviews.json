@@ -31,6 +31,20 @@
       "first_seen": "2026-10-26T11:53:54.560612+00:00"
     },
     {
+      "platform": "TripAdvisor",
+      "id": "1083265716",
+      "author": "341ciarac",
+      "rating": 5,
+      "title": "A gem in the west",
+      "text": "We attended a wedding here over the weekend and WOW the entire place every single detail you can tell is hand picked, whoever is in charge of the decor take a bow it was unreal. \nEven down to the uniforms the staff wore every little thing all tied together the staff were so friendly and the man who came out with an umbrella to the car in the storm what a hero , our room was huge and absolutely beautiful the little touches the water and coffee left and the gorgeous “ground” range for the bathrooms absolutely love this stuff.\nDidn’t get to the spa unfortunately but I heard it was also amazing which I don’t doubt.\nThe food at the wedding was amazing so so nice , but the breakfast the next morning I’m telling you now is probably the best breakfast spread I have ever seen or had it was outstanding! \nWe so enjoyed our stay and will definitely be returning an absolute gem in the west.",
+      "published": "2026-10-26T09:24:40.182Z",
+      "date": "2026-10-26",
+      "url": "https://www.tripadvisor.com/ShowUserReviews-g186627-d34251217-r1083265716-The_Grace_Westport_Estate-Westport_County_Mayo_Western_Ireland.html",
+      "rating_icon": "https://www.tripadvisor.com/img/cdsi/img2/ratings/traveler/5.0-70260-4.png",
+      "owner_response": false,
+      "first_seen": "2026-10-29T03:34:00.010702+00:00"
+    },
+    {
       "platform": "Google",
       "id": "google:Andrew Kirby:1793004052",
       "author": "Andrew Kirby",
@@ -839,7 +853,7 @@
     "Google": {
       "rating": 4.7,
       "count": 146,
-      "fetched": "2026-10-28T22:00:37.777038+00:00"
+      "fetched": "2026-10-29T03:34:00.010556+00:00"
     }
   }
 }
