@@ -4,6 +4,34 @@
   "reviews": [
     {
       "platform": "Google",
+      "id": "google:Toria Moylan:1793380245",
+      "author": "Toria Moylan",
+      "rating": 5,
+      "title": "",
+      "text": "If you are thinking about booking the Grace for your wedding, we couldn’t recommend it more. We got married at the Grace Hotel in October 2026 and it was perfect from start to finish.  Lauren, the wedding coordinator and her team could not have done more for us, they made the whole process so enjoyable, stress free and genuinely fun. Lauren brought the most calming energy and the day couldn’t have gone smoother, all thanks to them. They have their systems down to a tee. The food was exceptional across the board, the staff were so warm and professional and the venue itself is so stunning.\n\nTadgh, the operations manager was brilliant and so welcoming and made us feel right at home.\n\nMichael in reservations was amazing too, helping coordinate our guests accommodation.\n\nDylan at the concierge was so helpful and such a friendly face.\n\nAll of our guests couldn’t get over the standard of hospitality at the Grace and can not wait to go back.\nWe are delighted we chose the Grace, it exceeded our",
+      "published": "2026-10-30T17:10:45+00:00",
+      "date": "2026-10-30",
+      "url": "https://www.google.com/maps/contrib/100741312966994451880/reviews",
+      "rating_icon": "",
+      "owner_response": false,
+      "first_seen": "2026-10-30T17:28:24.037659+00:00"
+    },
+    {
+      "platform": "Google",
+      "id": "google:Eleanor Ash:1793372305",
+      "author": "Eleanor Ash",
+      "rating": 5,
+      "title": "",
+      "text": "Just had a lovely night in The Grace, great location and beautiful room. Food in Kelly's was amazing and breakfast in the restaurant was top tier. The best thing about the hotel is the staff, all great at their jobs but Oisín, Dylan and Breda made the stay especially memorable. Can't wait to go back!",
+      "published": "2026-10-30T14:58:25+00:00",
+      "date": "2026-10-30",
+      "url": "https://www.google.com/maps/contrib/101883254637396035995/reviews",
+      "rating_icon": "",
+      "owner_response": false,
+      "first_seen": "2026-10-30T17:28:24.037659+00:00"
+    },
+    {
+      "platform": "Google",
       "id": "google:Laura Fee:1793263377",
       "author": "Laura Fee",
       "rating": 5,
@@ -880,8 +908,8 @@
     },
     "Google": {
       "rating": 4.7,
-      "count": 147,
-      "fetched": "2026-10-30T11:52:50.438613+00:00"
+      "count": 149,
+      "fetched": "2026-10-30T17:28:24.268612+00:00"
     }
   }
 }
