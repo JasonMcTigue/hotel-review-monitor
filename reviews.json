@@ -17,6 +17,20 @@
       "first_seen": "2026-10-29T11:58:47.062577+00:00"
     },
     {
+      "platform": "TripAdvisor",
+      "id": "1083431405",
+      "author": "Wander778809",
+      "rating": 5,
+      "title": "A lovely weekend away at the Grace Hotel in Westport.",
+      "text": "Myself and my husband stayed at the Grace recently. \nThe hotel is beautifully designed and decorated and felt very warm and comfortable. \nOur room was lovely and spacious and the bathroom was very large and clean. \nWe ate both in the restaurant and in the bar and the food was excellent in both. The staff were efficient and friendly in all areas of the hotel. \nA trip to the spa is a must also. I would highly recommend it. \nThe hotel itself is incredibly well situated. It is only a 10 min  walk into the town centre for a little retail therapy or a visit to one of the very many pubs for some music and craic. \nOverall a really relaxing stay and I look forward to staying there again soon!",
+      "published": "2026-10-27T14:18:58.222Z",
+      "date": "2026-10-27",
+      "url": "https://www.tripadvisor.com/ShowUserReviews-g186627-d34251217-r1083431405-The_Grace_Westport_Estate-Westport_County_Mayo_Western_Ireland.html",
+      "rating_icon": "https://www.tripadvisor.com/img/cdsi/img2/ratings/traveler/5.0-70260-4.png",
+      "owner_response": false,
+      "first_seen": "2026-10-30T03:36:59.383543+00:00"
+    },
+    {
       "platform": "Google",
       "id": "google:Jim F:1793044103",
       "author": "Jim F",
@@ -867,7 +881,7 @@
     "Google": {
       "rating": 4.7,
       "count": 147,
-      "fetched": "2026-10-29T18:07:12.966469+00:00"
+      "fetched": "2026-10-30T03:36:59.383358+00:00"
     }
   }
 }
