@@ -46,6 +46,20 @@
     },
     {
       "platform": "TripAdvisor",
+      "id": "1083550382",
+      "author": "Seanodubhaill",
+      "rating": 5,
+      "title": "Westport family getaway",
+      "text": "We had a wonderful two night stay at this hotel with our two year old daughter and couldn’t have been happier with the experience.\n\nThe hotel is ideally located, within easy walking distance of the town, and is tastefully appointed throughout. However, what really made our stay special was the staff, who were an absolute delight. Everyone was so warm, friendly and welcoming, making us feel at home from the moment we arrived.\n\nThe bar was lovely and relaxing, and all the food we enjoyed at the hotel was delightful. A special mention must go to the breakfast, which offered an excellent variety of high quality options and was a real highlight of our stay.\n\nThe pool was also fantastic, and our daughter had a brilliant time enjoying it, which made the experience even more special for us as a family.\n\nI agree that the room can get warm, however I’m sure you can fix the settings, we just didn’t :-)\n\nAll in all, a fantastic hotel with a wonderful atmosphere, excellent food and genuinely lovely",
+      "published": "2026-10-28T14:11:41.821Z",
+      "date": "2026-10-28",
+      "url": "https://www.tripadvisor.com/ShowUserReviews-g186627-d34251217-r1083550382-The_Grace_Westport_Estate-Westport_County_Mayo_Western_Ireland.html",
+      "rating_icon": "https://www.tripadvisor.com/img/cdsi/img2/ratings/traveler/5.0-70260-4.png",
+      "owner_response": false,
+      "first_seen": "2026-10-31T03:21:07.704288+00:00"
+    },
+    {
+      "platform": "TripAdvisor",
       "id": "1083431405",
       "author": "Wander778809",
       "rating": 5,
@@ -909,7 +923,7 @@
     "Google": {
       "rating": 4.7,
       "count": 149,
-      "fetched": "2026-10-30T21:48:11.348254+00:00"
+      "fetched": "2026-10-31T03:21:07.704006+00:00"
     }
   }
 }
