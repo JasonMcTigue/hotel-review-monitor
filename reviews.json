@@ -4,6 +4,20 @@
   "reviews": [
     {
       "platform": "Google",
+      "id": "google:Julia O Boyle:1793535099",
+      "author": "Julia O Boyle",
+      "rating": 5,
+      "title": "",
+      "text": "such a good cosy stay! they were so welcoming upon arrival and at dinner the service was perfect - the hotel is gorgeous and the spa i would definitely love to stay again !",
+      "published": "2026-11-01T12:11:39+00:00",
+      "date": "2026-11-01",
+      "url": "https://www.google.com/maps/contrib/117407294900177617799/reviews",
+      "rating_icon": "",
+      "owner_response": false,
+      "first_seen": "2026-11-01T12:20:40.649589+00:00"
+    },
+    {
+      "platform": "Google",
       "id": "google:Toria Moylan:1793380245",
       "author": "Toria Moylan",
       "rating": 5,
@@ -922,8 +936,8 @@
     },
     "Google": {
       "rating": 4.7,
-      "count": 149,
-      "fetched": "2026-11-01T03:20:52.115741+00:00"
+      "count": 150,
+      "fetched": "2026-11-01T12:20:41.030052+00:00"
     }
   }
 }
