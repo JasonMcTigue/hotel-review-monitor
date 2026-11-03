@@ -4,6 +4,20 @@
   "reviews": [
     {
       "platform": "Google",
+      "id": "google:Avril:1793653792",
+      "author": "Avril",
+      "rating": 5,
+      "title": "",
+      "text": "We had an amazing two night stay over the October bank holiday weekend. From start to finish, everything was brilliant. The staff are so friendly and attentive. Each time we came and went from the hotel, there was a man at the door offering us an umbrella or offering to call us a taxi. Joseph, the rooms manager, was so helpful at check in and made sure everything was perfect with our room.\nThe food in the restaurant and the breakfast is delicious. Having a host seat everyone and the restaurant manager take orders is a nice touch. It is clear that the management and staff go above and beyond for their guest. We had a great time here and will be back again.",
+      "published": "2026-11-02T21:09:52+00:00",
+      "date": "2026-11-02",
+      "url": "https://www.google.com/maps/contrib/108777192528424385424/reviews",
+      "rating_icon": "",
+      "owner_response": false,
+      "first_seen": "2026-11-03T00:12:32.203774+00:00"
+    },
+    {
+      "platform": "Google",
       "id": "google:Julia O Boyle:1793535099",
       "author": "Julia O Boyle",
       "rating": 5,
@@ -936,8 +950,8 @@
     },
     "Google": {
       "rating": 4.7,
-      "count": 150,
-      "fetched": "2026-11-02T14:15:23.715598+00:00"
+      "count": 151,
+      "fetched": "2026-11-03T00:12:32.562030+00:00"
     }
   }
 }
