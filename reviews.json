@@ -4,6 +4,20 @@
   "reviews": [
     {
       "platform": "Google",
+      "id": "google:Vassilis Strigklos:1793894074",
+      "author": "Vassilis Strigklos",
+      "rating": 5,
+      "title": "",
+      "text": "",
+      "published": "2026-11-05T15:54:34+00:00",
+      "date": "2026-11-05",
+      "url": "https://www.google.com/maps/contrib/114571379919766311497/reviews",
+      "rating_icon": "",
+      "owner_response": false,
+      "first_seen": "2026-11-05T23:02:03.200035+00:00"
+    },
+    {
+      "platform": "Google",
       "id": "google:Avril:1793653792",
       "author": "Avril",
       "rating": 5,
@@ -964,8 +978,8 @@
     },
     "Google": {
       "rating": 4.7,
-      "count": 151,
-      "fetched": "2026-11-05T13:44:00.595695+00:00"
+      "count": 152,
+      "fetched": "2026-11-05T23:02:03.541274+00:00"
     }
   }
 }
