@@ -4,6 +4,20 @@
   "reviews": [
     {
       "platform": "Google",
+      "id": "google:Jim Harris:1793975194",
+      "author": "Jim Harris",
+      "rating": 5,
+      "title": "",
+      "text": "Warm, comfortable rooms, friendly and efficient staff, good facilities, terrible muzak in the bars, coffee machine and taps a bit of a challenge. Will come again.",
+      "published": "2026-11-06T14:26:34+00:00",
+      "date": "2026-11-06",
+      "url": "https://www.google.com/maps/contrib/104063772201783812018/reviews",
+      "rating_icon": "",
+      "owner_response": false,
+      "first_seen": "2026-11-06T22:32:21.761089+00:00"
+    },
+    {
+      "platform": "Google",
       "id": "google:Vassilis Strigklos:1793894074",
       "author": "Vassilis Strigklos",
       "rating": 5,
@@ -978,8 +992,8 @@
     },
     "Google": {
       "rating": 4.7,
-      "count": 152,
-      "fetched": "2026-11-06T13:28:04.494672+00:00"
+      "count": 153,
+      "fetched": "2026-11-06T22:32:22.106266+00:00"
     }
   }
 }
