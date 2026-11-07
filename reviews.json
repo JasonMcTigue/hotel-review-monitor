@@ -4,6 +4,20 @@
   "reviews": [
     {
       "platform": "Google",
+      "id": "google:Gary Raymond:1794045413",
+      "author": "Gary Raymond",
+      "rating": 4,
+      "title": "",
+      "text": "",
+      "published": "2026-11-07T09:56:53+00:00",
+      "date": "2026-11-07",
+      "url": "https://www.google.com/maps/contrib/112617053328565308032/reviews",
+      "rating_icon": "",
+      "owner_response": false,
+      "first_seen": "2026-11-07T12:07:46.696883+00:00"
+    },
+    {
+      "platform": "Google",
       "id": "google:Jim Harris:1793975194",
       "author": "Jim Harris",
       "rating": 5,
@@ -992,8 +1006,8 @@
     },
     "Google": {
       "rating": 4.7,
-      "count": 153,
-      "fetched": "2026-11-07T03:47:56.592544+00:00"
+      "count": 154,
+      "fetched": "2026-11-07T12:07:47.272656+00:00"
     }
   }
 }
