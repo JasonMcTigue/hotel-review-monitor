@@ -4,6 +4,34 @@
   "reviews": [
     {
       "platform": "Google",
+      "id": "google:Pat Caulfield:1794156362",
+      "author": "Pat Caulfield",
+      "rating": 5,
+      "title": "",
+      "text": "5 star service, most friendly staff, a happy place meals excellent and the renowned breakfast lived up to its reputation,",
+      "published": "2026-11-08T16:46:02+00:00",
+      "date": "2026-11-08",
+      "url": "https://www.google.com/maps/contrib/106108609661971325349/reviews",
+      "rating_icon": "",
+      "owner_response": false,
+      "first_seen": "2026-11-08T21:29:01.671206+00:00"
+    },
+    {
+      "platform": "Google",
+      "id": "google:Bròna Ryan:1794150253",
+      "author": "Bròna Ryan",
+      "rating": 5,
+      "title": "",
+      "text": "We had a wonderful stay at The Grace and it was made all better by the wonderful hospitality and warmth from Breda. The breakfast was exceptional and we felt so welcomed, Breda ensured we had all needed up until we headed for home. We look forward to coming back to stay and seeing the development of the Westport house project",
+      "published": "2026-11-08T15:04:13+00:00",
+      "date": "2026-11-08",
+      "url": "https://www.google.com/maps/contrib/102384030076308723797/reviews",
+      "rating_icon": "",
+      "owner_response": false,
+      "first_seen": "2026-11-08T21:29:01.671206+00:00"
+    },
+    {
+      "platform": "Google",
       "id": "google:Gary Raymond:1794045413",
       "author": "Gary Raymond",
       "rating": 4,
@@ -1020,8 +1048,8 @@
     },
     "Google": {
       "rating": 4.7,
-      "count": 154,
-      "fetched": "2026-11-08T12:28:13.407549+00:00"
+      "count": 156,
+      "fetched": "2026-11-08T21:29:01.902609+00:00"
     }
   }
 }
