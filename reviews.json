@@ -45,6 +45,20 @@
       "first_seen": "2026-11-05T23:02:03.200035+00:00"
     },
     {
+      "platform": "TripAdvisor",
+      "id": "1084489490",
+      "author": "774marykaym",
+      "rating": 5,
+      "title": "Remarkable Irish Hospitality",
+      "text": "My husband and I had an amazing three night stay at The Grace in mid-September. The staff was very professional and  welcomed us in a warm and friendly manner. Our room was spacious  and well appointed with everything we needed for a  comfortable stay. Breakfast was a sight to behold with  everything from their famous Irish brown bread to amazing scones and croissants to  delightful egg dishes and various meats and cheeses. The restaurant  and bar are  exceptional.   I want to especially acknowledge the general manager, Ciaran Reidy, who oversees an amazing staff  and has imbued a strong commitment to guest satisfaction.  We so look forward to our next stay!",
+      "published": "2026-11-05T15:15:44.35Z",
+      "date": "2026-11-05",
+      "url": "https://www.tripadvisor.com/ShowUserReviews-g186627-d34251217-r1084489490-The_Grace_Westport_Estate-Westport_County_Mayo_Western_Ireland.html",
+      "rating_icon": "https://www.tripadvisor.com/img/cdsi/img2/ratings/traveler/5.0-70260-4.png",
+      "owner_response": false,
+      "first_seen": "2026-11-08T12:28:13.407658+00:00"
+    },
+    {
       "platform": "Google",
       "id": "google:Avril:1793653792",
       "author": "Avril",
@@ -1007,7 +1021,7 @@
     "Google": {
       "rating": 4.7,
       "count": 154,
-      "fetched": "2026-11-08T03:27:54.749474+00:00"
+      "fetched": "2026-11-08T12:28:13.407549+00:00"
     }
   }
 }
