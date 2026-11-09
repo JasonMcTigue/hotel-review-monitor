@@ -4,6 +4,20 @@
   "reviews": [
     {
       "platform": "Google",
+      "id": "google:Stephanie:1794229104",
+      "author": "Stephanie",
+      "rating": 5,
+      "title": "",
+      "text": "We had such a lovely stay at The Grace. Everything from the bedrooms to the reception is beautifully decorated, with lots of thoughtful little touches. Every meal we had was delicious, and the wine and cocktails were amazing. I can’t compliment the staff enough. They were so friendly and went out of their way to make our family celebration very special. Thanks so much; we will definitely be back.",
+      "published": "2026-11-09T12:58:24+00:00",
+      "date": "2026-11-09",
+      "url": "https://www.google.com/maps/contrib/101217528705309417928/reviews",
+      "rating_icon": "",
+      "owner_response": false,
+      "first_seen": "2026-11-09T14:43:26.083062+00:00"
+    },
+    {
+      "platform": "Google",
       "id": "google:Pat Caulfield:1794156362",
       "author": "Pat Caulfield",
       "rating": 5,
@@ -1048,8 +1062,8 @@
     },
     "Google": {
       "rating": 4.7,
-      "count": 156,
-      "fetched": "2026-11-09T03:44:09.995024+00:00"
+      "count": 157,
+      "fetched": "2026-11-09T14:43:26.314131+00:00"
     }
   }
 }
