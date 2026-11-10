@@ -4,6 +4,20 @@
   "reviews": [
     {
       "platform": "Google",
+      "id": "google:Stevie Lew:1794325366",
+      "author": "Stevie Lew",
+      "rating": 5,
+      "title": "",
+      "text": "Had a lovely stay - staff are super friendly and helpful - amazing breakfast and 12:00 check-out is a bonus. Thx a mil",
+      "published": "2026-11-10T15:42:46+00:00",
+      "date": "2026-11-10",
+      "url": "https://www.google.com/maps/contrib/105492333506701164666/reviews",
+      "rating_icon": "",
+      "owner_response": false,
+      "first_seen": "2026-11-10T22:39:45.447800+00:00"
+    },
+    {
+      "platform": "Google",
       "id": "google:johann crowe:1794309479",
       "author": "johann crowe",
       "rating": 5,
@@ -1076,8 +1090,8 @@
     },
     "Google": {
       "rating": 4.7,
-      "count": 158,
-      "fetched": "2026-11-10T13:58:23.586638+00:00"
+      "count": 159,
+      "fetched": "2026-11-10T22:39:45.667960+00:00"
     }
   }
 }
