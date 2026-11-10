@@ -4,6 +4,20 @@
   "reviews": [
     {
       "platform": "Google",
+      "id": "google:johann crowe:1794309479",
+      "author": "johann crowe",
+      "rating": 5,
+      "title": "",
+      "text": "The Grace hotel is one of the best hotels ive stayed in for a while ..The staff  are\njust  so friendly and attentive in every part of the hotel  .we had dinner and i had lots of choice as a vegan .breakfast was just incredible. The rooms are beautiful I love the colours  on the walls and the decoration in the  bathrooms was so lovely  and the beds are so comfortable. I would highly recommend The Grace and will be back again. The spa  is also amazing 10/10",
+      "published": "2026-11-10T11:17:59+00:00",
+      "date": "2026-11-10",
+      "url": "https://www.google.com/maps/contrib/110673985332647031884/reviews",
+      "rating_icon": "",
+      "owner_response": false,
+      "first_seen": "2026-11-10T13:58:23.257296+00:00"
+    },
+    {
+      "platform": "Google",
       "id": "google:Stephanie:1794229104",
       "author": "Stephanie",
       "rating": 5,
@@ -1062,8 +1076,8 @@
     },
     "Google": {
       "rating": 4.7,
-      "count": 157,
-      "fetched": "2026-11-10T00:59:11.307274+00:00"
+      "count": 158,
+      "fetched": "2026-11-10T13:58:23.586638+00:00"
     }
   }
 }
