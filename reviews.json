@@ -1098,9 +1098,9 @@
   "scores": {
     "TripAdvisor": {
       "rating": 4.6,
-      "count": 143,
+      "count": 144,
       "icon_url": "https://www.tripadvisor.com/img/cdsi/img2/ratings/traveler/4.5-70260-4.png",
-      "fetched": "2026-11-10T15:53:50.691655+00:00"
+      "fetched": "2026-11-11T15:40:54.571756+00:00"
     },
     "Google": {
       "rating": 4.7,
