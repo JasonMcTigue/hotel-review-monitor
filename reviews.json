@@ -3,6 +3,34 @@
   "google_place_id": "ChIJRSMLtd5lWUgR1ZANfvIm4Dg",
   "reviews": [
     {
+      "platform": "TripAdvisor",
+      "id": "1085273144",
+      "author": "SiobhanS_11",
+      "rating": 5,
+      "title": "Ab absolute gem in the West!",
+      "text": "What an absolute gem of a hotel. My husband was celebrating a big birthday and we went Westport and Connemara. The Grace was our first stop for two nights and what a wonderful welcome we got from Mary and her team. You can feel the friendly atmosphere as soon as you walk in the door with the lovely Dylan to assist with our luggage. The decor in the hotel is very tasteful and the staff uniforms are really nice with the tweed. The service and the staff are excellent. The breakfast was absolutely fabulous one of the best ever. Our bedroom was beautiful. On arrival to our room there was the most beautiful orange birthday treat for my husband. The staff were amazing but a few stood out who deserve a mention. Michelle on reception was very helpful and so full of knowledge not only about the area but everything from travel to sport etc. we enjoyed our chat. Damikka looking after us at breakfast was a pleasure to meet. Nothing was a problem and she was very efficient. Marisa in Kelly’s Bar was",
+      "published": "2026-11-12T14:31:51.848Z",
+      "date": "2026-11-12",
+      "url": "https://www.tripadvisor.com/ShowUserReviews-g186627-d34251217-r1085273144-The_Grace_Westport_Estate-Westport_County_Mayo_Western_Ireland.html",
+      "rating_icon": "https://www.tripadvisor.com/img/cdsi/img2/ratings/traveler/5.0-70260-4.png",
+      "owner_response": false,
+      "first_seen": "2026-11-15T13:10:52.016738+00:00"
+    },
+    {
+      "platform": "TripAdvisor",
+      "id": "1085270860",
+      "author": "BrandonDublinIreland",
+      "rating": 5,
+      "title": "Excellent Hotel",
+      "text": "We stayed for four nights and had a really good time at The Grace. Previously, we have stayed before at its predecessor Hotel Westport. The transition to the new hotel is excellent. We had a very friendly welcome on arrival and accompanied to our room to be shown how things worked. The room is very comfortable with an excellent large bathroom. Breakfast is a delight with probably one of the best spreads of tasty food in Ireland to choose from. \n\nOne night we had dinner in The Black Sheep Restaurant for a birthday celebration which was very nice with a fine bottle of wine. We ate in Kellys Bar another night which was also very good. The other two nights we walked into town to eat else where for a change. It is only about a ten to fifteen minute pleasant walk to the centre.  \n\nThe hotel generates a genuine spirit of Irish hospitality and the entire team are friendly and helpful. Well done to all.",
+      "published": "2026-11-12T14:05:20.217Z",
+      "date": "2026-11-12",
+      "url": "https://www.tripadvisor.com/ShowUserReviews-g186627-d34251217-r1085270860-The_Grace_Westport_Estate-Westport_County_Mayo_Western_Ireland.html",
+      "rating_icon": "https://www.tripadvisor.com/img/cdsi/img2/ratings/traveler/5.0-70260-4.png",
+      "owner_response": false,
+      "first_seen": "2026-11-15T13:10:52.016738+00:00"
+    },
+    {
       "platform": "Google",
       "id": "google:Clare Hanley:1794440149",
       "author": "Clare Hanley",
@@ -1133,7 +1161,7 @@
     "Google": {
       "rating": 4.7,
       "count": 160,
-      "fetched": "2026-11-15T03:53:20.933682+00:00"
+      "fetched": "2026-11-15T13:10:52.016703+00:00"
     }
   }
 }
