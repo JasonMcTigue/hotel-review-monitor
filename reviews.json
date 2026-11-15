@@ -3,6 +3,34 @@
   "google_place_id": "ChIJRSMLtd5lWUgR1ZANfvIm4Dg",
   "reviews": [
     {
+      "platform": "Google",
+      "id": "google:Barry Donovan:1794763811",
+      "author": "Barry Donovan",
+      "rating": 5,
+      "title": "",
+      "text": "Spent 2 nights at The Grace with friends and family for my Wife’s Birthday. An amazing experience. Rooms, quality of food, service, breakfast & warmth of staff was all superb. Our kids loved the pool and location to explore Westport. Thank you to Ciaran, Joseph and all the team, we are planning our next trip already!",
+      "published": "2026-11-15T17:30:11+00:00",
+      "date": "2026-11-15",
+      "url": "https://www.google.com/maps/contrib/109074511278909614025/reviews",
+      "rating_icon": "",
+      "owner_response": false,
+      "first_seen": "2026-11-15T22:17:18.550260+00:00"
+    },
+    {
+      "platform": "Google",
+      "id": "google:Aidan:1794763605",
+      "author": "Aidan",
+      "rating": 5,
+      "title": "",
+      "text": "Excellent hotel with a lovely breakfast. Great location. Friendly staff and a nice pool / sauna. Would definitely stay here again.",
+      "published": "2026-11-15T17:26:45+00:00",
+      "date": "2026-11-15",
+      "url": "https://www.google.com/maps/contrib/118041512667762340830/reviews",
+      "rating_icon": "",
+      "owner_response": false,
+      "first_seen": "2026-11-15T22:17:18.550260+00:00"
+    },
+    {
       "platform": "TripAdvisor",
       "id": "1085273144",
       "author": "SiobhanS_11",
@@ -1160,8 +1188,8 @@
     },
     "Google": {
       "rating": 4.7,
-      "count": 160,
-      "fetched": "2026-11-15T13:10:52.016703+00:00"
+      "count": 162,
+      "fetched": "2026-11-15T22:17:18.703410+00:00"
     }
   }
 }
