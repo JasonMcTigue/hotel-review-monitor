@@ -4,6 +4,34 @@
   "reviews": [
     {
       "platform": "Google",
+      "id": "google:Cyril McCluskey:1795197671",
+      "author": "Cyril McCluskey",
+      "rating": 5,
+      "title": "",
+      "text": "",
+      "published": "2026-11-20T18:01:11+00:00",
+      "date": "2026-11-20",
+      "url": "https://www.google.com/maps/contrib/101248186927208133041/reviews",
+      "rating_icon": "",
+      "owner_response": false,
+      "first_seen": "2026-11-20T23:30:02.213711+00:00"
+    },
+    {
+      "platform": "Google",
+      "id": "google:David Dolan:1795187470",
+      "author": "David Dolan",
+      "rating": 4,
+      "title": "",
+      "text": "",
+      "published": "2026-11-20T15:11:10+00:00",
+      "date": "2026-11-20",
+      "url": "https://www.google.com/maps/contrib/108157586860887735861/reviews",
+      "rating_icon": "",
+      "owner_response": false,
+      "first_seen": "2026-11-20T23:30:02.213711+00:00"
+    },
+    {
+      "platform": "Google",
       "id": "google:Barry Donovan:1794763811",
       "author": "Barry Donovan",
       "rating": 5,
@@ -1188,8 +1216,8 @@
     },
     "Google": {
       "rating": 4.7,
-      "count": 162,
-      "fetched": "2026-11-20T14:37:21.588913+00:00"
+      "count": 164,
+      "fetched": "2026-11-20T23:30:02.349505+00:00"
     }
   }
 }
