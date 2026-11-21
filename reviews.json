@@ -4,6 +4,20 @@
   "reviews": [
     {
       "platform": "Google",
+      "id": "google:Sandra Riaño:1795279230",
+      "author": "Sandra Riaño",
+      "rating": 5,
+      "title": "",
+      "text": "The Grace blew me away. Firstly, the hotel is clean, warm, and inviting. As someone who suffers from asthma and sensitive skin, dusty rooms and detergents can easily make a stay at a hotel uncomfortable. Immediately upon entering my room, I knew that I would feel exceptional. That can make a hotel great in my book, but the Grace when one step further.\n\nWhat blew me away was the hospitality of the hotel. Everyone was warm and welcoming. When we arrived and casually mentioned we were celebrating our anniversary, champagne arrived in our room just minutes later. The next day when I struggled to secure a taxi for our boat tour, the front desk had a taxi arrive in less than 5 minutes. The option to have breakfast in bed, after a week of travel, was a welcome choice. The hotel's location is excellent, a short 10 minute walk into town, but secluded enough that it feels relaxing to retreat to at the end of the day.\n\nIf you have a chance to stay at this hotel, you won't be disappointed. Where m",
+      "published": "2026-11-21T16:40:30+00:00",
+      "date": "2026-11-21",
+      "url": "https://www.google.com/maps/contrib/108287315458354224436/reviews",
+      "rating_icon": "",
+      "owner_response": false,
+      "first_seen": "2026-11-21T22:36:34.706715+00:00"
+    },
+    {
+      "platform": "Google",
       "id": "google:Cyril McCluskey:1795197671",
       "author": "Cyril McCluskey",
       "rating": 5,
@@ -1216,8 +1230,8 @@
     },
     "Google": {
       "rating": 4.7,
-      "count": 164,
-      "fetched": "2026-11-21T13:55:01.136717+00:00"
+      "count": 165,
+      "fetched": "2026-11-21T22:36:34.884388+00:00"
     }
   }
 }
