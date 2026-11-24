@@ -4,6 +4,20 @@
   "reviews": [
     {
       "platform": "Google",
+      "id": "google:Ciara Davis:1795527581",
+      "author": "Ciara Davis",
+      "rating": 5,
+      "title": "",
+      "text": "The staff were my favourite aspect of this hotel - they really couldn't do any more! You feel they really enjoy what they do. Can't wait to come back !!",
+      "published": "2026-11-24T13:39:41+00:00",
+      "date": "2026-11-24",
+      "url": "https://www.google.com/maps/contrib/109293444889992519723/reviews",
+      "rating_icon": "",
+      "owner_response": false,
+      "first_seen": "2026-11-24T16:43:45.725868+00:00"
+    },
+    {
+      "platform": "Google",
       "id": "google:Ciara C:1795310208",
       "author": "Ciara C",
       "rating": 5,
@@ -1244,8 +1258,8 @@
     },
     "Google": {
       "rating": 4.7,
-      "count": 166,
-      "fetched": "2026-11-24T03:37:57.977362+00:00"
+      "count": 167,
+      "fetched": "2026-11-24T16:43:45.952373+00:00"
     }
   }
 }
