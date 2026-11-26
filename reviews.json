@@ -4,6 +4,20 @@
   "reviews": [
     {
       "platform": "Google",
+      "id": "google:Kevin Collins:1795626439",
+      "author": "Kevin Collins",
+      "rating": 5,
+      "title": "",
+      "text": "Excellent get away experience, great hosting, great service, great people, who also happen to be All Ireland Footage Champions 2026",
+      "published": "2026-11-25T17:07:19+00:00",
+      "date": "2026-11-25",
+      "url": "https://www.google.com/maps/contrib/104784892674373405415/reviews",
+      "rating_icon": "",
+      "owner_response": false,
+      "first_seen": "2026-11-26T01:20:02.058688+00:00"
+    },
+    {
+      "platform": "Google",
       "id": "google:Ciara Davis:1795527581",
       "author": "Ciara Davis",
       "rating": 5,
@@ -1258,8 +1272,8 @@
     },
     "Google": {
       "rating": 4.7,
-      "count": 167,
-      "fetched": "2026-11-25T16:29:21.452259+00:00"
+      "count": 168,
+      "fetched": "2026-11-26T01:20:02.261242+00:00"
     }
   }
 }
